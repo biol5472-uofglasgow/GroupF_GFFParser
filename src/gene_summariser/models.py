@@ -69,4 +69,21 @@ class Transcript:
         return sum(cds.length for cds in self.cds_features)
 
 
+@dataclass
+class Gene:
+    """Represents a gene with multiple transcripts."""
+    
+    gene_id: str
+    seqid: str
+    start: int
+    end: int
+    strand: str
+    transcripts: list[Transcript] = field(default_factory=list)
+    attributes: dict[str, str] = field(default_factory=dict)
+    
+    @property
+    def n_transcripts(self) -> int:
+        """Return the number of transcripts."""
+        return len(self.transcripts)
+
 
