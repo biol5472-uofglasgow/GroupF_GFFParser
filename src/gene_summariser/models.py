@@ -27,5 +27,13 @@ class Exon(Feature):
         if self.seqid != other.seqid or self.strand != other.strand:
             return False
         return not (self.end < other.start or self.start > other.end)
+    
+@dataclass
+class CDS(Feature):
+    """Represents a coding sequence."""
+    
+    phase: int = 0
+
+
 
 
