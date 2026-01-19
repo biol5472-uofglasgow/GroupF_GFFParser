@@ -86,4 +86,21 @@ class Gene:
         """Return the number of transcripts."""
         return len(self.transcripts)
 
-
+@dataclass
+class TranscriptSummary:
+    """Summary statistics and QC flags for a transcript."""
+    
+    gene_id: str
+    transcript_id: str
+    n_exons: int
+    has_cds: bool
+    flags: list[str] = field(default_factory=list)
+    
+    # Optional additional metrics
+    total_exon_length: Optional[int] = None
+    total_cds_length: Optional[int] = None
+    
+    @property
+    def flags_str(self) -> str:
+        """Return flags as a comma-separated string."""
+        return ",".join(sorted(self.flags)) if self.flags else ""
