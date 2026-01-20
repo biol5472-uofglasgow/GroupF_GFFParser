@@ -2,7 +2,11 @@ import os
 
 import gffutils
 
+import logging
+
 from gene_summariser.models import Gene, Transcript, Exon, CDS, Feature
+
+logger = logging.getLogger(__name__)
 
 
 class ParserGFF:
@@ -80,7 +84,7 @@ class ParserGFF:
         
         # This can be changed when doing flags, however for now its usful for testing that its caught, same goes for no CDS
         if not exon_children:
-            raise ValueError(f"No exons found for transcript {transcript_feature.id}")
+            logger.warning(f"No exon features found for this transcript {transcript_feature.id}")
         
         exon_children.sort(
             key=lambda x: x.start,
@@ -103,7 +107,7 @@ class ParserGFF:
         cds_children = list(self.db.children(transcript_feature, featuretype="CDS"))
         
         if not cds_children:
-            raise ValueError(f"No CDS features found for transcript {transcript_feature.id}")
+            logger.warning(f"No CDS features found for this transcript {transcript_feature.id}")
 
         cds_children.sort(
             key=lambda x: x.start,
