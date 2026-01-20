@@ -18,6 +18,10 @@ class ParserGFF:
         parse_genes() -> list[Gene]: Parses the GFF file and returns a list of Gene features. (To be implemented)
     """
 
+    allowed_transcript_types = ["mRNA", "transcript", "ncRNA", "lnc_RNA", 
+                       "miRNA", "rRNA", "tRNA", "snoRNA"]
+    
+
     def __init__(self, gff_path: str) -> None:
         """
         Creating the GFF database if it does not exist, otherwise loading the existing database.
@@ -29,23 +33,23 @@ class ParserGFF:
         """
         self.gff_path = gff_path
         # Creating the database path from the GFF file path, this is used to both find or create the database.
-        db_path = os.path.splitext(self.gff_path)[0] + ".db"
+        if not os.path.exists(gff_path):
+            raise FileNotFoundError(f"GFF3 file not found: {gff_path}")
 
-        if os.path.exists(db_path):
-            self.db = gffutils.FeatureDB(db_path, keep_order=True)
-        else:
-            try:
-                self.db = gffutils.create_db(
-                    self.gff_path,
-                    dbfn=db_path,
-                    force=True,
-                    keep_order=True,
-                    sort_attribute_values=True,
-                )
-            except FileNotFoundError as e:
-                raise FileNotFoundError(
-                    f"Error creating GFF database from {self.gff_path}: {e}"
-                )
+        try:
+            self.db = gffutils.create_db(
+                self.gff_path,
+                dbfn=":memory:",
+                force=True,
+                keep_order=True,
+                merge_strategy="create_unique",
+                sort_attribute_values=True,
+            )
+
+        except Exception as e:
+            raise ValueError(
+                f"Error parsing GFF3 file {gff_path}: {str(e)}"
+            ) from e
 
     def parse_transcript(self, transcript_feature) -> Transcript:
         """
@@ -59,8 +63,31 @@ class ParserGFF:
         exons = []
         cds_features = []
 
+        if "gene_id" in transcript_feature.attributes:
+            gene_ids = transcript_feature.attributes["gene_id"]
+            gene_id = gene_ids[0] if isinstance(gene_ids, list) else gene_ids
+
+        elif "Parent" in transcript_feature.attributes:
+            parents = transcript_feature.attributes["Parent"]
+            gene_id = parents[0] if isinstance(parents, list) else parents
+
+        else:
+            gene_id = transcript_feature.id.split(".")[0]
+
         # Creating the list of Exon and CDS objects associated to the current transcript.
-        for exon in self.db.children(transcript_feature, featuretype="exon"):
+        # Sorting them based on their start position, taking into account the strand of the transcript. This wille make gene flags using FASTA data easier later on.
+        exon_children = list(self.db.children(transcript_feature, featuretype="exon"))
+        
+        # This can be changed when doing flags, however for now its usful for testing that its caught, same goes for no CDS
+        if not exon_children:
+            raise ValueError(f"No exons found for transcript {transcript_feature.id}")
+        
+        exon_children.sort(
+            key=lambda x: x.start,
+            reverse=(transcript_feature.strand == "-"),
+        )
+        
+        for exon in exon_children:
             exons.append(
                 Exon(
                     seqid=exon.seqid,
@@ -72,7 +99,18 @@ class ParserGFF:
                 )
             )
 
-        for cds in self.db.children(transcript_feature, featuretype="CDS"):
+
+        cds_children = list(self.db.children(transcript_feature, featuretype="CDS"))
+        
+        if not cds_children:
+            raise ValueError(f"No CDS features found for transcript {transcript_feature.id}")
+
+        cds_children.sort(
+            key=lambda x: x.start,
+            reverse=(transcript_feature.strand == "-"),
+        )
+
+        for cds in cds_children:
             cds_features.append(
                 CDS(
                     seqid=cds.seqid,
@@ -86,7 +124,7 @@ class ParserGFF:
 
         transcript = Transcript(
             transcript_id=transcript_feature.id,
-            gene_id=transcript_feature.attributes.get("gene_id", [""])[0],
+            gene_id=gene_id,
             seqid=transcript_feature.seqid,
             start=transcript_feature.start,
             end=transcript_feature.end,
@@ -108,7 +146,7 @@ class ParserGFF:
         """
         transcripts = []
 
-        for transcript_feature in self.db.features_of_type("mRNA"):
+        for transcript_feature in self.db.features_of_type(self.allowed_transcript_types):
             transcript = self.parse_transcript(transcript_feature)
             transcripts.append(transcript)
 
@@ -127,7 +165,7 @@ class ParserGFF:
         for gene_feature in self.db.features_of_type("gene"):
             transcripts = []
 
-            for transcript_feature in self.db.children(gene_feature, featuretype="mRNA"):
+            for transcript_feature in self.db.children(gene_feature, featuretype=self.allowed_transcript_types):
                 transcript = self.parse_transcript(transcript_feature)
                 transcripts.append(transcript)
 
