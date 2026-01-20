@@ -53,7 +53,6 @@ class ParserGFF:
                         start=cds.start,
                         end=cds.end,
                         strand=cds.strand,
-                        cds_id=cds.id,
                         phase=int(cds.frame) if cds.frame is not None else 0,
                         attributes=dict(cds.attributes),
                     )
