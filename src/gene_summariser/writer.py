@@ -133,3 +133,44 @@ class OutputWriter:
                     f.write(line + "\n")
         
         return output_path
+    
+    def write_qc_flags_bed(
+        self,
+        transcripts: list[Transcript],
+        summaries: list[TranscriptSummary],
+    ) -> Path:
+        """Write QC flags to BED format.
+        
+        Args:
+            transcripts: Original transcript objects
+            summaries: Transcript summaries with flags
+            
+        Returns:
+            Path to the output file
+        """
+        # Create a mapping of transcript_id to flags
+        flags_map = {s.transcript_id: s.flags_str for s in summaries if s.flags}
+        
+        output_path = self.output_dir / "qc_flags.bed"
+        
+        with open(output_path, "w") as f:
+            # BED header
+            f.write("# chrom\tstart\tend\tname\tscore\tstrand\n")
+            
+            # Write only transcripts with flags
+            for transcript in sorted(transcripts, key=lambda t: (t.seqid, t.start)):
+                if transcript.transcript_id in flags_map:
+                    flags = flags_map[transcript.transcript_id]
+                    
+                    # BED uses 0-based coordinates
+                    line = "\t".join([
+                        transcript.seqid,
+                        str(transcript.start - 1),  # Convert to 0-based
+                        str(transcript.end),
+                        f"{transcript.transcript_id}|{flags}",
+                        "0",
+                        transcript.strand,
+                    ])
+                    f.write(line + "\n")
+        
+        return output_path
