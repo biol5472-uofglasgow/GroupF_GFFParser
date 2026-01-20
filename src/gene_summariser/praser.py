@@ -158,7 +158,7 @@ class ParserGFF:
         for gene_feature in self.db.features_of_type("gene"):
             transcripts = []
 
-            for transcript_feature in self.db.children(gene_feature, featuretype="mRNA"):
+            for transcript_feature in self.db.children(gene_feature, featuretype=self.allowed_transcript_types):
                 transcript = self.parse_transcript(transcript_feature)
                 transcripts.append(transcript)
 
