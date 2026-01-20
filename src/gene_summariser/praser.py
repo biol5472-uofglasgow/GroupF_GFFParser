@@ -2,7 +2,7 @@ import os
 
 import gffutils
 
-from gene_summariser.models import Transcript, Exon, CDS, Feature
+from gene_summariser.models import Gene, Transcript, Exon, CDS, Feature
 
 
 class ParserGFF:
@@ -47,58 +47,53 @@ class ParserGFF:
                     f"Error creating GFF database from {self.gff_path}: {e}"
                 )
 
-    def parse_transcripts(self) -> list[Transcript]:
+    def parse_transcript(self, transcript_feature) -> Transcript:
         """
-        Parses the GFF file and returns a list of Transcript objects, format of which was defined in models.py.
+        Parses the GFF file and returns a single Transcript objects, format of which was defined in models.py.
         Returns:
-            list[Transcript]: A list of Transcript objects with associated exons and CDS features.
+            Transcript: A single transcript object
         Raises:
             (To be implemented)
         """
-        transcripts: list[Transcript] = []
-        # In GFF3 files, mRNA features represent transcripts.
-        for feature in self.db.features_of_type("mRNA"):
 
-            exons = []
-            cds_features = []
+        exons = []
+        cds_features = []
 
-            # Creating the list of Exon and CDS objects associated to the current transcript.
-            for exon in self.db.children(feature, featuretype="exon"):
-                exons.append(
-                    Exon(
-                        seqid=exon.seqid,
-                        start=exon.start,
-                        end=exon.end,
-                        strand=exon.strand,
-                        exon_id=exon.id,
-                        attributes=dict(exon.attributes),
-                    )
+        # Creating the list of Exon and CDS objects associated to the current transcript.
+        for exon in self.db.children(transcript_feature, featuretype="exon"):
+            exons.append(
+                Exon(
+                    seqid=exon.seqid,
+                    start=exon.start,
+                    end=exon.end,
+                    strand=exon.strand,
+                    exon_id=exon.id,
+                    attributes=dict(exon.attributes),
                 )
-
-            for cds in self.db.children(feature, featuretype="CDS"):
-                cds_features.append(
-                    CDS(
-                        seqid=cds.seqid,
-                        start=cds.start,
-                        end=cds.end,
-                        strand=cds.strand,
-                        phase=int(cds.frame) if cds.frame is not None else 0,
-                        attributes=dict(cds.attributes),
-                    )
-                )
-
-            transcript = Transcript(
-                transcript_id=feature.id,
-                gene_id=feature.attributes.get("gene_id", [""])[0],
-                seqid=feature.seqid,
-                start=feature.start,
-                end=feature.end,
-                strand=feature.strand,
-                exons=exons,
-                cds_features=cds_features,
-                attributes=dict(feature.attributes),
             )
 
-            transcripts.append(transcript)
+        for cds in self.db.children(transcript_feature, featuretype="CDS"):
+            cds_features.append(
+                CDS(
+                    seqid=cds.seqid,
+                    start=cds.start,
+                    end=cds.end,
+                    strand=cds.strand,
+                    phase=int(cds.frame) if cds.frame is not None else 0,
+                    attributes=dict(cds.attributes),
+                )
+            )
 
-        return transcripts
+        transcript = Transcript(
+            transcript_id=transcript_feature.id,
+            gene_id=transcript_feature.attributes.get("gene_id", [""])[0],
+            seqid=transcript_feature.seqid,
+            start=transcript_feature.start,
+            end=transcript_feature.end,
+            strand=transcript_feature.strand,
+            exons=exons,
+            cds_features=cds_features,
+            attributes=dict(transcript_feature.attributes),
+        )
+
+        return transcript
