@@ -18,6 +18,10 @@ class ParserGFF:
         parse_genes() -> list[Gene]: Parses the GFF file and returns a list of Gene features. (To be implemented)
     """
 
+    allowed_transcript_types = ["mRNA", "transcript", "ncRNA", "lnc_RNA", 
+                       "miRNA", "rRNA", "tRNA", "snoRNA"]
+    
+
     def __init__(self, gff_path: str) -> None:
         """
         Creating the GFF database if it does not exist, otherwise loading the existing database.
@@ -29,23 +33,23 @@ class ParserGFF:
         """
         self.gff_path = gff_path
         # Creating the database path from the GFF file path, this is used to both find or create the database.
-        db_path = os.path.splitext(self.gff_path)[0] + ".db"
+        if not os.path.exists(gff_path):
+            raise FileNotFoundError(f"GFF3 file not found: {gff_path}")
 
-        if os.path.exists(db_path):
-            self.db = gffutils.FeatureDB(db_path, keep_order=True)
-        else:
-            try:
-                self.db = gffutils.create_db(
-                    self.gff_path,
-                    dbfn=db_path,
-                    force=True,
-                    keep_order=True,
-                    sort_attribute_values=True,
-                )
-            except FileNotFoundError as e:
-                raise FileNotFoundError(
-                    f"Error creating GFF database from {self.gff_path}: {e}"
-                )
+        try:
+            self.db = gffutils.create_db(
+                self.gff_path,
+                dbfn=":memory:",
+                force=True,
+                keep_order=True,
+                merge_strategy="create_unique",
+                sort_attribute_values=True,
+            )
+            
+        except Exception as e:
+            raise ValueError(
+                f"Error parsing GFF3 file {gff_path}: {str(e)}"
+            ) from e
 
     def parse_transcript(self, transcript_feature) -> Transcript:
         """
