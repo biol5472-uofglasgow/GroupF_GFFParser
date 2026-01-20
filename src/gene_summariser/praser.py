@@ -77,7 +77,11 @@ class ParserGFF:
         # Creating the list of Exon and CDS objects associated to the current transcript.
         # Sorting them based on their start position, taking into account the strand of the transcript. This wille make gene flags using FASTA data easier later on.
         exon_children = list(self.db.children(transcript_feature, featuretype="exon"))
-
+        
+        # This can be changed when doing flags, however for now its usful for testing that its caught, same goes for no CDS
+        if not exon_children:
+            raise ValueError(f"No exons found for transcript {transcript_feature.id}")
+        
         exon_children.sort(
             key=lambda x: x.start,
             reverse=(transcript_feature.strand == "-"),
@@ -97,6 +101,9 @@ class ParserGFF:
 
 
         cds_children = list(self.db.children(transcript_feature, featuretype="CDS"))
+        
+        if not cds_children:
+            raise ValueError(f"No CDS features found for transcript {transcript_feature.id}")
 
         cds_children.sort(
             key=lambda x: x.start,
