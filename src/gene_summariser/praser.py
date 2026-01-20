@@ -113,3 +113,35 @@ class ParserGFF:
             transcripts.append(transcript)
 
         return transcripts
+    
+    def parse_genes(self) -> list[Gene]:
+        """
+        Creates a list of Gene objects by parsing the GFF file.
+        Returns:
+            list[Gene]: A list of Gene objects.
+        Raises:
+            (To be implemented)
+        """
+        genes = []
+        
+        for gene_feature in self.db.features_of_type("gene"):
+            transcripts = []
+
+            for transcript_feature in self.db.children(gene_feature, featuretype="mRNA"):
+                transcript = self.parse_transcript(transcript_feature)
+                transcripts.append(transcript)
+
+            gene = Gene(
+                gene_id=gene_feature.id, 
+                seqid=gene_feature.seqid,
+                start=gene_feature.start,
+                end=gene_feature.end,
+                strand=gene_feature.strand,
+                transcripts=transcripts,
+                attributes=dict(gene_feature.attributes),
+            )
+            genes.append(gene)
+
+        return genes
+            
+
