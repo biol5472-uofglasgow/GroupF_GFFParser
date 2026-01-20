@@ -75,7 +75,15 @@ class ParserGFF:
             gene_id = transcript_feature.id.split(".")[0]
 
         # Creating the list of Exon and CDS objects associated to the current transcript.
-        for exon in self.db.children(transcript_feature, featuretype="exon"):
+        # Sorting them based on their start position, taking into account the strand of the transcript. This wille make gene flags using FASTA data easier later on.
+        exon_children = list(self.db.children(transcript_feature, featuretype="exon"))
+
+        exon_children.sort(
+            key=lambda x: x.start,
+            reverse=(transcript_feature.strand == "-"),
+        )
+        
+        for exon in exon_children:
             exons.append(
                 Exon(
                     seqid=exon.seqid,
@@ -87,7 +95,15 @@ class ParserGFF:
                 )
             )
 
-        for cds in self.db.children(transcript_feature, featuretype="CDS"):
+
+        cds_children = list(self.db.children(transcript_feature, featuretype="CDS"))
+
+        cds_children.sort(
+            key=lambda x: x.start,
+            reverse=(transcript_feature.strand == "-"),
+        )
+
+        for cds in cds_children:
             cds_features.append(
                 CDS(
                     seqid=cds.seqid,
