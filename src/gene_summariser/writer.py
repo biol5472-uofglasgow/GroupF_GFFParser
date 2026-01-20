@@ -50,3 +50,35 @@ class OutputWriter:
         df.to_csv(output_path, sep="\t", index=False)
         
         return output_path
+    
+    def write_provenance(
+        self,
+        input_file: Path,
+        parameters: dict[str, Any],
+        version: str = "0.1.0",
+    ) -> Path:
+        """Write provenance information to JSON.
+        
+        Args:
+            input_file: Path to input GFF3 file
+            parameters: Dictionary of parameters used
+            version: Tool version
+            
+        Returns:
+            Path to the output file
+        """
+        provenance = {
+            "tool": "gene-summariser",
+            "version": version,
+            "timestamp": datetime.now().isoformat(),
+            "inputs": {
+                "gff3_file": str(input_file.absolute()),
+            },
+            "parameters": parameters,
+        }
+        
+        output_path = self.output_dir / "run.json"
+        with open(output_path, "w") as f:
+            json.dump(provenance, f, indent=2)
+        
+        return output_path
