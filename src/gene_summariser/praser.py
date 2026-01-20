@@ -2,6 +2,8 @@ import os
 
 import gffutils
 
+from gene_summariser.models import Transcript, Exon, CDS, Feature
+
 
 class ParserGFF:
     def __init__(self, gff_file: str) -> None:
@@ -23,3 +25,25 @@ class ParserGFF:
                 raise FileNotFoundError(
                     f"Error creating GFF database from {gff_file}: {e}"
                 )
+            
+    def parse_transcripts(self) -> list[Transcript]:
+
+        
+
+        transcripts: list[Transcript] = []
+        for feature in self.db.features_of_type("mRNA"):
+
+            transcript = Transcript(
+                transcript_id=feature.id,
+                gene_id=feature.attributes.get("gene_id", [""])[0],
+                seqid=feature.seqid,
+                start=feature.start,
+                end=feature.end,
+                strand=feature.strand,
+                exons=exons,
+                cds_features=cds_features,
+                attributes=dict(feature.attributes),
+            )
+            transcripts.append(transcript)
+
+        return transcripts
