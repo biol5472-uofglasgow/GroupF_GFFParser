@@ -82,3 +82,54 @@ class OutputWriter:
             json.dump(provenance, f, indent=2)
         
         return output_path
+    
+    def write_qc_flags_gff3(
+        self,
+        transcripts: list[Transcript],
+        summaries: list[TranscriptSummary],
+    ) -> Path:
+        """Write QC flags to GFF3 format.
+        
+        Args:
+            transcripts: Original transcript objects
+            summaries: Transcript summaries with flags
+            
+        Returns:
+            Path to the output file
+        """
+        # Create a mapping of transcript_id to flags
+        flags_map = {s.transcript_id: s.flags_str for s in summaries if s.flags}
+        
+        output_path = self.output_dir / "qc_flags.gff3"
+        
+        with open(output_path, "w") as f:
+            f.write("##gff-version 3\n")
+            
+            # Write only transcripts with flags
+            for transcript in sorted(transcripts, key=lambda t: (t.seqid, t.start)):
+                if transcript.transcript_id in flags_map:
+                    flags = flags_map[transcript.transcript_id]
+                    
+                    # Build attributes string
+                    attrs = [
+                        f"ID={transcript.transcript_id}",
+                        f"Parent={transcript.gene_id}",
+                        f"qc_flags={flags}",
+                    ]
+                    attrs_str = ";".join(attrs)
+                    
+                    # Write GFF3 line
+                    line = "\t".join([
+                        transcript.seqid,
+                        "gene_summariser",
+                        "transcript",
+                        str(transcript.start),
+                        str(transcript.end),
+                        ".",
+                        transcript.strand,
+                        ".",
+                        attrs_str,
+                    ])
+                    f.write(line + "\n")
+        
+        return output_path
