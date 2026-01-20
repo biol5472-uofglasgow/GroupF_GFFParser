@@ -115,7 +115,13 @@ class ParserGFF:
         return transcripts
     
     def parse_genes(self) -> list[Gene]:
-        
+        """
+        Creates a list of Gene objects by parsing the GFF file.
+        Returns:
+            list[Gene]: A list of Gene objects.
+        Raises:
+            (To be implemented)
+        """
         genes = []
         
         for gene_feature in self.db.features_of_type("gene"):
