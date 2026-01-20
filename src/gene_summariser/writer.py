@@ -8,3 +8,6 @@ from typing import Any
 import pandas as pd
 
 from gene_summariser.models import TranscriptSummary, Transcript
+
+class OutputWriter:
+    """Handles writing outputs to various formats."""
