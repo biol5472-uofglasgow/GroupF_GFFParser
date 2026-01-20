@@ -45,7 +45,7 @@ class ParserGFF:
                 merge_strategy="create_unique",
                 sort_attribute_values=True,
             )
-            
+
         except Exception as e:
             raise ValueError(
                 f"Error parsing GFF3 file {gff_path}: {str(e)}"
@@ -62,6 +62,17 @@ class ParserGFF:
 
         exons = []
         cds_features = []
+
+        if "gene_id" in transcript_feature.attributes:
+            gene_ids = transcript_feature.attributes["gene_id"]
+            gene_id = gene_ids[0] if isinstance(gene_ids, list) else gene_ids
+
+        elif "Parent" in transcript_feature.attributes:
+            parents = transcript_feature.attributes["Parent"]
+            gene_id = parents[0] if isinstance(parents, list) else parents
+
+        else:
+            gene_id = transcript_feature.id.split(".")[0]
 
         # Creating the list of Exon and CDS objects associated to the current transcript.
         for exon in self.db.children(transcript_feature, featuretype="exon"):
@@ -90,7 +101,7 @@ class ParserGFF:
 
         transcript = Transcript(
             transcript_id=transcript_feature.id,
-            gene_id=transcript_feature.attributes.get("gene_id", [""])[0],
+            gene_id=gene_id,
             seqid=transcript_feature.seqid,
             start=transcript_feature.start,
             end=transcript_feature.end,
