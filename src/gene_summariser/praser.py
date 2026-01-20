@@ -123,7 +123,7 @@ class ParserGFF:
         """
         transcripts = []
 
-        for transcript_feature in self.db.features_of_type("mRNA"):
+        for transcript_feature in self.db.features_of_type(self.allowed_transcript_types):
             transcript = self.parse_transcript(transcript_feature)
             transcripts.append(transcript)
 
