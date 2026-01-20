@@ -32,6 +32,34 @@ class ParserGFF:
 
         transcripts: list[Transcript] = []
         for feature in self.db.features_of_type("mRNA"):
+            
+            exons = []
+            cds_features = []
+
+            for exon in self.db.children(feature, featuretype="exon"):
+                exons.append(
+                    Exon(
+                        seqid=exon.seqid,
+                        start=exon.start,
+                        end=exon.end,
+                        strand=exon.strand,
+                        exon_id=exon.id,
+                        attributes=dict(exon.attributes),
+                    )
+                )
+
+            for cds in self.db.children(feature, featuretype="CDS"):
+                cds_features.append(
+                    CDS(
+                        seqid=cds.seqid,
+                        start=cds.start,
+                        end=cds.end,
+                        strand=cds.strand,
+                        cds_id=cds.id,
+                        phase=int(cds.frame) if cds.frame is not None else 0,
+                        attributes=dict(cds.attributes),
+                    )
+                )
 
             transcript = Transcript(
                 transcript_id=feature.id,
