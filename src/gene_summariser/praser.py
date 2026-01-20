@@ -97,3 +97,19 @@ class ParserGFF:
         )
 
         return transcript
+
+    def parse_transcripts(self) -> list[Transcript]:
+        """
+        Creates a list of Transcript objects by parsing the GFF file.
+        Returns:
+            list[Transcript]: A list of Transcript objects.
+        Raises:
+            (To be implemented)
+        """
+        transcripts = []
+
+        for transcript_feature in self.db.features_of_type("mRNA"):
+            transcript = self.parse_transcript(transcript_feature)
+            transcripts.append(transcript)
+
+        return transcripts
