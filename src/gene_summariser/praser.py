@@ -1,10 +1,9 @@
+import logging
 import os
 
 import gffutils
 
-import logging
-
-from gene_summariser.models import Gene, Transcript, Exon, CDS, Feature
+from gene_summariser.models import CDS, Exon, Gene, Transcript
 
 logger = logging.getLogger(__name__)
 
@@ -22,9 +21,16 @@ class ParserGFF:
         parse_genes() -> list[Gene]: Parses the GFF file and returns a list of Gene features. (To be implemented)
     """
 
-    allowed_transcript_types = ["mRNA", "transcript", "ncRNA", "lnc_RNA", 
-                       "miRNA", "rRNA", "tRNA", "snoRNA"]
-    
+    allowed_transcript_types = [
+        "mRNA",
+        "transcript",
+        "ncRNA",
+        "lnc_RNA",
+        "miRNA",
+        "rRNA",
+        "tRNA",
+        "snoRNA",
+    ]
 
     def __init__(self, gff_path: str) -> None:
         """
@@ -51,9 +57,7 @@ class ParserGFF:
             )
 
         except Exception as e:
-            raise ValueError(
-                f"Error parsing GFF3 file {gff_path}: {str(e)}"
-            ) from e
+            raise ValueError(f"Error parsing GFF3 file {gff_path}: {str(e)}") from e
 
     def parse_transcript(self, transcript_feature) -> Transcript:
         """
@@ -81,16 +85,18 @@ class ParserGFF:
         # Creating the list of Exon and CDS objects associated to the current transcript.
         # Sorting them based on their start position, taking into account the strand of the transcript. This wille make gene flags using FASTA data easier later on.
         exon_children = list(self.db.children(transcript_feature, featuretype="exon"))
-        
+
         # This can be changed when doing flags, however for now its usful for testing that its caught, same goes for no CDS
         if not exon_children:
-            logger.warning(f"No exon features found for this transcript {transcript_feature.id}")
-        
+            logger.warning(
+                f"No exon features found for this transcript {transcript_feature.id}"
+            )
+
         exon_children.sort(
             key=lambda x: x.start,
             reverse=(transcript_feature.strand == "-"),
         )
-        
+
         for exon in exon_children:
             exons.append(
                 Exon(
@@ -103,11 +109,12 @@ class ParserGFF:
                 )
             )
 
-
         cds_children = list(self.db.children(transcript_feature, featuretype="CDS"))
-        
+
         if not cds_children:
-            logger.warning(f"No CDS features found for this transcript {transcript_feature.id}")
+            logger.warning(
+                f"No CDS features found for this transcript {transcript_feature.id}"
+            )
 
         cds_children.sort(
             key=lambda x: x.start,
@@ -150,12 +157,14 @@ class ParserGFF:
         """
         transcripts = []
 
-        for transcript_feature in self.db.features_of_type(self.allowed_transcript_types):
+        for transcript_feature in self.db.features_of_type(
+            self.allowed_transcript_types
+        ):
             transcript = self.parse_transcript(transcript_feature)
             transcripts.append(transcript)
 
         return transcripts
-    
+
     def parse_genes(self) -> list[Gene]:
         """
         Creates a list of Gene objects by parsing the GFF file.
@@ -165,16 +174,18 @@ class ParserGFF:
             (To be implemented)
         """
         genes = []
-        
+
         for gene_feature in self.db.features_of_type("gene"):
             transcripts = []
 
-            for transcript_feature in self.db.children(gene_feature, featuretype=self.allowed_transcript_types):
+            for transcript_feature in self.db.children(
+                gene_feature, featuretype=self.allowed_transcript_types
+            ):
                 transcript = self.parse_transcript(transcript_feature)
                 transcripts.append(transcript)
 
             gene = Gene(
-                gene_id=gene_feature.id, 
+                gene_id=gene_feature.id,
                 seqid=gene_feature.seqid,
                 start=gene_feature.start,
                 end=gene_feature.end,
@@ -185,5 +196,3 @@ class ParserGFF:
             genes.append(gene)
 
         return genes
-            
-
