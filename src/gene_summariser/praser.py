@@ -57,7 +57,6 @@ class ParserGFF:
             )
 
         except Exception as e:
-<<<<<<< HEAD
             raise ValueError(
                 f"Error parsing GFF3 file {gff_path}: {str(e)}"
             ) from e
@@ -84,9 +83,6 @@ class ParserGFF:
         
         return gene_id
     
-=======
-            raise ValueError(f"Error parsing GFF3 file {gff_path}: {str(e)}") from e
->>>>>>> 5b59065e58fd01a8443b1dc0a5713701b0f1c797
 
     def parse_transcript(self, transcript_feature) -> Transcript:
         """
