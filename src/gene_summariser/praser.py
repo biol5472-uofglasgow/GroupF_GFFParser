@@ -227,3 +227,5 @@ class ParserGFF:
             genes.append(gene)
 
         return genes
+    
+print("ParserGFF module loaded successfully.")
