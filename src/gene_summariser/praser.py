@@ -84,21 +84,15 @@ class ParserGFF:
         
         return gene_id
     
-
-    def parse_transcript(self, transcript_feature) -> Transcript:
+    def _get_exons(self, transcript_feature: gffutils.Feature) -> list[Exon]:
         """
-        Parses the GFF file and returns a single Transcript objects, format of which was defined in models.py.
+        Parses the exon features associated with a given transcript feature.
+        Args:
+            transcript_feature (gffutils.Feature): The transcript feature for which to extract exons.
         Returns:
-            Transcript: A single transcript object
-        Raises:
-            (To be implemented)
+            list[Exon]: A list of Exon objects associated with the transcript.
         """
-
         exons = []
-        cds_features = []
-
-        # Creating the list of Exon and CDS objects associated to the current transcript.
-        # Sorting them based on their start position, taking into account the strand of the transcript. This wille make gene flags using FASTA data easier later on.
         exon_children = list(self.db.children(transcript_feature, featuretype="exon"))
 
         # This can be changed when doing flags, however for now its usful for testing that its caught, same goes for no CDS
@@ -124,6 +118,17 @@ class ParserGFF:
                 )
             )
 
+        return exons
+    
+    def _get_cdss(self, transcript_feature: gffutils.Feature) -> list[CDS]:
+        """
+        Parses the CDS features associated with a given transcript feature.
+        Args:
+            transcript_feature (gffutils.Feature): The transcript feature for which to extract CDS features.
+        Returns:
+            list[CDS]: A list of CDS objects associated with the transcript.
+        """
+        cds_features = []
         cds_children = list(self.db.children(transcript_feature, featuretype="CDS"))
 
         if not cds_children:
@@ -147,6 +152,17 @@ class ParserGFF:
                     attributes=dict(cds.attributes),
                 )
             )
+        return cds_features
+    
+
+    def parse_transcript(self, transcript_feature) -> Transcript:
+        """
+        Parses the GFF file and returns a single Transcript objects, format of which was defined in models.py.
+        Returns:
+            Transcript: A single transcript object
+        Raises:
+            (To be implemented)
+        """
 
         transcript = Transcript(
             transcript_id=transcript_feature.id,
@@ -155,8 +171,8 @@ class ParserGFF:
             start=transcript_feature.start,
             end=transcript_feature.end,
             strand=transcript_feature.strand,
-            exons=exons,
-            cds_features=cds_features,
+            exons=self._get_exons(transcript_feature),
+            cds_features=self._get_cdss(transcript_feature),
             attributes=dict(transcript_feature.attributes),
         )
 
