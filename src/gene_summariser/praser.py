@@ -57,7 +57,36 @@ class ParserGFF:
             )
 
         except Exception as e:
+<<<<<<< HEAD
+            raise ValueError(
+                f"Error parsing GFF3 file {gff_path}: {str(e)}"
+            ) from e
+    
+    def _get_id(self, feature) -> str:
+        """
+        Method to extract the ID from a feature, handling different possible attribute names.
+        Args:
+            feature (gffutils.Feature): The feature from which to extract the ID.
+        Returns:
+            str: The extracted ID.
+        """
+
+        if "gene_id" in feature.attributes:
+            gene_ids = feature.attributes["gene_id"]
+            gene_id = gene_ids[0] if isinstance(gene_ids, list) else gene_ids
+
+        elif "Parent" in feature.attributes:
+            parents = feature.attributes["Parent"]
+            gene_id = parents[0] if isinstance(parents, list) else parents
+
+        else:
+            gene_id = feature.id.split(".")[0]
+        
+        return gene_id
+    
+=======
             raise ValueError(f"Error parsing GFF3 file {gff_path}: {str(e)}") from e
+>>>>>>> 5b59065e58fd01a8443b1dc0a5713701b0f1c797
 
     def parse_transcript(self, transcript_feature) -> Transcript:
         """
@@ -70,17 +99,6 @@ class ParserGFF:
 
         exons = []
         cds_features = []
-
-        if "gene_id" in transcript_feature.attributes:
-            gene_ids = transcript_feature.attributes["gene_id"]
-            gene_id = gene_ids[0] if isinstance(gene_ids, list) else gene_ids
-
-        elif "Parent" in transcript_feature.attributes:
-            parents = transcript_feature.attributes["Parent"]
-            gene_id = parents[0] if isinstance(parents, list) else parents
-
-        else:
-            gene_id = transcript_feature.id.split(".")[0]
 
         # Creating the list of Exon and CDS objects associated to the current transcript.
         # Sorting them based on their start position, taking into account the strand of the transcript. This wille make gene flags using FASTA data easier later on.
@@ -135,7 +153,7 @@ class ParserGFF:
 
         transcript = Transcript(
             transcript_id=transcript_feature.id,
-            gene_id=gene_id,
+            gene_id=self._get_id(transcript_feature),
             seqid=transcript_feature.seqid,
             start=transcript_feature.start,
             end=transcript_feature.end,
