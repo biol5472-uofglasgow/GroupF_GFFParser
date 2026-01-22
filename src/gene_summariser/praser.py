@@ -61,7 +61,8 @@ class ParserGFF:
                 f"Error parsing GFF3 file {gff_path}: {str(e)}"
             ) from e
     
-    def _get_id(self, feature) -> str:
+    @staticmethod
+    def _get_id(feature) -> str:
         """
         Method to extract the ID from a feature, handling different possible attribute names.
         Args:
