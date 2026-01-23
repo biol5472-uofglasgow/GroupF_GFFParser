@@ -217,3 +217,30 @@ class QCChecker:
         if transcript.has_cds and transcript.total_cds_length < self.min_cds_length:
             return "short_cds"
         return None
+     
+     def check_cds_not_divisible_by_3(self, transcript: Transcript) -> str | None:
+        """Check if CDS length is not divisible by 3.
+        
+        CDS length must be divisible by 3 to encode complete codons.
+        A length not divisible by 3 indicates:
+        - Frameshift mutation
+        - Incomplete annotation
+        - Annotation error
+        - Premature stop codon
+        
+        This is a critical biological validation check.
+        
+        Args:
+            transcript: Transcript to check
+            
+        Returns:
+            "cds_not_divisible_by_3" if CDS length not divisible by 3,
+            None otherwise
+        """
+        if not transcript.has_cds:
+            return None
+        
+        if transcript.total_cds_length % 3 != 0:
+            return "cds_not_divisible_by_3"
+        
+        return None
