@@ -179,3 +179,24 @@ class QCChecker:
                 return "overlapping_exons"
         
         return None
+     
+    # ========================================================================
+    # CDS CHECKS
+    # ========================================================================
+
+     def check_no_cds(self, transcript: Transcript) -> str | None:
+        """Check if transcript has no coding sequence.
+        
+        Transcripts without CDS are typically non-coding RNAs (ncRNAs,
+        lncRNAs, etc.). This flag helps distinguish coding from non-coding
+        transcripts.
+        
+        Args:
+            transcript: Transcript to check
+            
+        Returns:
+            "no_cds" if transcript lacks CDS features, None otherwise
+        """
+        if not transcript.has_cds:
+            return "no_cds"
+        return None
