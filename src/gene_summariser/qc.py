@@ -154,3 +154,28 @@ class QCChecker:
             if exon.length > self.max_exon_length:
                 return "long_exon"
         return None
+     
+     def check_overlapping_exons(self, transcript: Transcript) -> str | None:
+        """Check if any exons overlap (critical annotation error).
+        
+        Overlapping exons within the same transcript indicate a serious
+        annotation error. Exons should be separated by introns.
+        
+        Note: This only checks exons on the same strand. Different
+        transcripts or genes can have overlapping exons.
+        
+        Args:
+            transcript: Transcript to check
+            
+        Returns:
+            "overlapping_exons" if any exons overlap, None otherwise
+        """
+        # Sort exons by start position for efficient overlap checking
+        exons = sorted(transcript.exons, key=lambda e: e.start)
+        
+        # Check each adjacent pair
+        for i in range(len(exons) - 1):
+            if exons[i].overlaps(exons[i + 1]):
+                return "overlapping_exons"
+        
+        return None
