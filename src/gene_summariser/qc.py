@@ -55,3 +55,33 @@ class QCChecker:
             self.check_cds_not_divisible_by_3,
             self.check_cds_phase_inconsistent,
         ]
+
+     def check_transcript(self, transcript: Transcript) -> list[str]:
+        """Run all registered QC checks on a transcript.
+        
+        This method automatically runs all checks registered in self._checks
+        and collects any flags that are returned.
+        
+        Args:
+            transcript: Transcript to check
+            
+        Returns:
+            List of QC flag strings. Empty list if no issues found.
+            
+        Example:
+            >>> checker = QCChecker()
+            >>> transcript = parser.parse_transcript(...)
+            >>> flags = checker.check_transcript(transcript)
+            >>> if flags:
+            ...     print(f"Found {len(flags)} issues: {', '.join(flags)}")
+            Found 2 issues: no_cds, single_exon
+        """
+        flags: list[str] = []
+        
+        for check in self._checks:
+            flag = check(transcript)
+            if flag:
+                flags.append(flag)
+        
+        return flags
+     
