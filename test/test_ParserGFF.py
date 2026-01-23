@@ -1,27 +1,33 @@
-from gene_summariser.praser import ParserGFF
 import pytest
+
+from gene_summariser.parser import ParserGFF
+
 
 class TestFeatureGFF:
     def __init__(self, attributes, feature_id):
         self.attributes = attributes
         self.id = feature_id
 
+
 @pytest.fixture
 def gff_file():
     return "test/models.gff3"
+
 
 @pytest.fixture
 def parser(gff_file):
     return ParserGFF(gff_file)
 
+
 def test_number_transcripts(parser):
     transcripts = parser.parse_transcripts()
     assert len(transcripts) == 2
 
+
 def test_correct_feilds(parser):
     transcripts = parser.parse_transcripts()
     transcript = transcripts[1]
-    
+
     assert transcript.transcript_id == "tx2"
     assert transcript.gene_id == "gene1"
     assert transcript.seqid == "chr1"
@@ -31,15 +37,18 @@ def test_correct_feilds(parser):
     assert len(transcript.exons) == 2
     assert len(transcript.cds_features) == 0
 
+
 def test_exon_parsing_gene_id(parser):
     feature = TestFeatureGFF(attributes={"gene_id": "gene1"}, feature_id="tx1")
     gene_id = ParserGFF._get_id(feature)
     assert gene_id == "gene1"
 
+
 def test_exon_parsing_parent(parser):
     feature = TestFeatureGFF(attributes={"Parent": "gene2"}, feature_id="tx2")
     gene_id = ParserGFF._get_id(feature)
     assert gene_id == "gene2"
+
 
 def test_exon_parsing_fallback(parser):
     feature = TestFeatureGFF(attributes={}, feature_id="gene3")
