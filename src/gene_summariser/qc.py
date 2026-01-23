@@ -121,4 +121,20 @@ class QCChecker:
             return "single_exon"
         return None
      
+     def check_high_exon_count(self, transcript: Transcript) -> str | None:
+        """Check if transcript has an unusually high number of exons.
+        
+        Transcripts with extremely high exon counts may indicate annotation
+        errors such as fragmented exons or merged gene models.
+        
+        Args:
+            transcript: Transcript to check
+            
+        Returns:
+            "high_exon_count" if exon count exceeds threshold, None otherwise
+        """
+        if transcript.n_exons > self.max_exon_count:
+            return "high_exon_count"
+        return None
+     
      
