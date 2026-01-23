@@ -57,10 +57,8 @@ class ParserGFF:
             )
 
         except Exception as e:
-            raise ValueError(
-                f"Error parsing GFF3 file {gff_path}: {str(e)}"
-            ) from e
-    
+            raise ValueError(f"Error parsing GFF3 file {gff_path}: {str(e)}") from e
+
     @staticmethod
     def _get_id(feature) -> str:
         """
@@ -81,9 +79,9 @@ class ParserGFF:
 
         else:
             gene_id = feature.id.split(".")[0]
-        
+
         return gene_id
-    
+
     def _get_exons(self, transcript_feature: gffutils.Feature) -> list[Exon]:
         """
         Parses the exon features associated with a given transcript feature.
@@ -119,7 +117,7 @@ class ParserGFF:
             )
 
         return exons
-    
+
     def _get_cdss(self, transcript_feature: gffutils.Feature) -> list[CDS]:
         """
         Parses the CDS features associated with a given transcript feature.
@@ -153,7 +151,6 @@ class ParserGFF:
                 )
             )
         return cds_features
-    
 
     def parse_transcript(self, transcript_feature) -> Transcript:
         """
@@ -226,6 +223,7 @@ class ParserGFF:
             )
             genes.append(gene)
 
-        return genes
-    
+        yield genes
+
+
 print("ParserGFF module loaded successfully.")
