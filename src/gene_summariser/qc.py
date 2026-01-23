@@ -84,4 +84,22 @@ class QCChecker:
                 flags.append(flag)
         
         return flags
-     
+    # ========================================================================
+    # STRUCTURAL CHECKS
+    # ========================================================================
+    
+     def check_no_exons(self, transcript: Transcript) -> str | None:
+        """Check if transcript has no exons (critical annotation error).
+        
+        A transcript without exons indicates a severe annotation problem.
+        This should never occur in properly formatted GFF3 files.
+        
+        Args:
+            transcript: Transcript to check
+            
+        Returns:
+            "no_exons" if transcript has no exons, None otherwise
+        """
+        if transcript.n_exons == 0:
+            return "no_exons"
+        return None
