@@ -137,4 +137,20 @@ class QCChecker:
             return "high_exon_count"
         return None
      
-     
+     def check_long_exon(self, transcript: Transcript) -> str | None:
+        """Check if any exon is unusually long.
+        
+        Extremely long exons may indicate unannotated introns or merged
+        exon features. Typical exons are a few hundred bp, with most
+        under 10kb.
+        
+        Args:
+            transcript: Transcript to check
+            
+        Returns:
+            "long_exon" if any exon exceeds length threshold, None otherwise
+        """
+        for exon in transcript.exons:
+            if exon.length > self.max_exon_length:
+                return "long_exon"
+        return None
