@@ -200,3 +200,20 @@ class QCChecker:
         if not transcript.has_cds:
             return "no_cds"
         return None
+     
+     def check_short_cds(self, transcript: Transcript) -> str | None:
+        """Check if CDS is unusually short.
+        
+        Very short CDS regions may indicate incomplete annotations,
+        pseudogenes, or annotation errors. Typical proteins are at least
+        50-100 amino acids (150-300 bp).
+        
+        Args:
+            transcript: Transcript to check
+            
+        Returns:
+            "short_cds" if CDS length is below threshold, None otherwise
+        """
+        if transcript.has_cds and transcript.total_cds_length < self.min_cds_length:
+            return "short_cds"
+        return None
