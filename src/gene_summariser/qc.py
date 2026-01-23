@@ -103,3 +103,22 @@ class QCChecker:
         if transcript.n_exons == 0:
             return "no_exons"
         return None
+     
+     def check_single_exon(self, transcript: Transcript) -> str | None:
+        """Check if transcript has only one exon.
+        
+        Single-exon transcripts are unusual in eukaryotes (though valid for
+        some genes like histones). This flag helps identify potential
+        annotation issues or biologically interesting features.
+        
+        Args:
+            transcript: Transcript to check
+            
+        Returns:
+            "single_exon" if transcript has exactly one exon, None otherwise
+        """
+        if transcript.n_exons == 1:
+            return "single_exon"
+        return None
+     
+     
