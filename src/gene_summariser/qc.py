@@ -244,3 +244,63 @@ class QCChecker:
             return "cds_not_divisible_by_3"
         
         return None
+     
+
+     def check_cds_phase_inconsistent(self, transcript: Transcript) -> str | None:
+        """Check if CDS phases are inconsistent across multiple CDS features.
+        
+        In a properly annotated transcript with multiple CDS features
+        (split by introns), the phase of each CDS must be consistent with
+        the cumulative length of previous CDS features.
+        
+        Phase calculation:
+            next_phase = (current_phase + current_length) % 3
+        
+        Inconsistent phases indicate:
+        - Annotation errors in phase assignment
+        - Incorrectly merged/split CDS features
+        - Errors in intron/exon boundaries
+        
+        This is an advanced biological validation check that ensures
+        proper reading frame maintenance across introns.
+        
+        Args:
+            transcript: Transcript to check
+            
+        Returns:
+            "cds_phase_inconsistent" if phases are inconsistent,
+            None otherwise
+            
+        Example:
+            CDS 1: phase=0, length=100  → next expected phase = (0+100)%3 = 1
+            CDS 2: phase=1 ✓ (correct)
+            CDS 3: phase=0 ✗ (inconsistent - should be 2)
+        """
+        cds_list = transcript.cds_features
+        
+        # Need at least 2 CDS features to check consistency
+        if len(cds_list) < 2:
+            return None
+        
+        # Sort CDS features by genomic position (accounting for strand direction)
+        if transcript.strand == '+':
+            # Forward strand: sort by start position (5' to 3')
+            sorted_cds = sorted(cds_list, key=lambda c: c.start)
+        else:
+            # Reverse strand: sort by start position descending (5' to 3' in reverse)
+            sorted_cds = sorted(cds_list, key=lambda c: c.start, reverse=True)
+        
+        # Check phase consistency between adjacent CDS features
+        for i in range(len(sorted_cds) - 1):
+            current_cds = sorted_cds[i]
+            next_cds = sorted_cds[i + 1]
+            
+            # Calculate expected phase based on current CDS length
+            cds_length = current_cds.length
+            expected_next_phase = (current_cds.phase + cds_length) % 3
+            
+            # Check if actual phase matches expected phase
+            if next_cds.phase != expected_next_phase:
+                return "cds_phase_inconsistent"
+        
+        return None
