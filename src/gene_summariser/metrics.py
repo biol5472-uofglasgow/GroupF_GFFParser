@@ -11,3 +11,19 @@ class MetricsCalculator:
     Attributes:
         qc_checker: QCChecker instance for running quality checks
     """
+    
+    def __init__(self, qc_checker: QCChecker | None = None) -> None:
+        """Initialize metrics calculator.
+        
+        Args:
+            qc_checker: QC checker instance. If None, creates a default checker.
+            
+        Example:
+            >>> # Use default QC settings
+            >>> calculator = MetricsCalculator()
+            >>> 
+            >>> # Use custom QC settings
+            >>> strict_checker = QCChecker(max_exon_count=50, min_cds_length=100)
+            >>> calculator = MetricsCalculator(strict_checker)
+        """
+        self.qc_checker = qc_checker or QCChecker()
