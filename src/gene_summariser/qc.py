@@ -1,5 +1,5 @@
 from gene_summariser.models import Transcript, TranscriptSummary
-from gene_summariser.Summariser import make_summary
+from gene_summariser.summariser import make_summary
 
 
 def flag_devisable_by_three(transcript: Transcript, summary: TranscriptSummary) -> None:
