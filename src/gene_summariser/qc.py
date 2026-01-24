@@ -4,8 +4,9 @@ from typing import Callable
 
 from gene_summariser.models import Transcript
 
+
 class QCChecker:
-     """Performs quality control checks on transcripts.
+    """Performs quality control checks on transcripts.
     
     This class implements a comprehensive set of QC checks for gene annotations,
     including both structural validation and biological plausibility checks.
@@ -15,8 +16,8 @@ class QCChecker:
         min_cds_length: Minimum CDS length in base pairs
         max_exon_length: Maximum reasonable exon length in base pairs
     """
-     
-     def __init__(
+    
+    def __init__(
         self,
         max_exon_count: int = 100,
         min_cds_length: int = 30,
@@ -56,7 +57,7 @@ class QCChecker:
             self.check_cds_phase_inconsistent,
         ]
 
-     def check_transcript(self, transcript: Transcript) -> list[str]:
+    def check_transcript(self, transcript: Transcript) -> list[str]:
         """Run all registered QC checks on a transcript.
         
         This method automatically runs all checks registered in self._checks
@@ -84,11 +85,12 @@ class QCChecker:
                 flags.append(flag)
         
         return flags
+    
     # ========================================================================
     # STRUCTURAL CHECKS
     # ========================================================================
     
-     def check_no_exons(self, transcript: Transcript) -> str | None:
+    def check_no_exons(self, transcript: Transcript) -> str | None:
         """Check if transcript has no exons (critical annotation error).
         
         A transcript without exons indicates a severe annotation problem.
@@ -103,8 +105,8 @@ class QCChecker:
         if transcript.n_exons == 0:
             return "no_exons"
         return None
-     
-     def check_single_exon(self, transcript: Transcript) -> str | None:
+    
+    def check_single_exon(self, transcript: Transcript) -> str | None:
         """Check if transcript has only one exon.
         
         Single-exon transcripts are unusual in eukaryotes (though valid for
@@ -120,8 +122,8 @@ class QCChecker:
         if transcript.n_exons == 1:
             return "single_exon"
         return None
-     
-     def check_high_exon_count(self, transcript: Transcript) -> str | None:
+    
+    def check_high_exon_count(self, transcript: Transcript) -> str | None:
         """Check if transcript has an unusually high number of exons.
         
         Transcripts with extremely high exon counts may indicate annotation
@@ -136,8 +138,8 @@ class QCChecker:
         if transcript.n_exons > self.max_exon_count:
             return "high_exon_count"
         return None
-     
-     def check_long_exon(self, transcript: Transcript) -> str | None:
+    
+    def check_long_exon(self, transcript: Transcript) -> str | None:
         """Check if any exon is unusually long.
         
         Extremely long exons may indicate unannotated introns or merged
@@ -154,8 +156,8 @@ class QCChecker:
             if exon.length > self.max_exon_length:
                 return "long_exon"
         return None
-     
-     def check_overlapping_exons(self, transcript: Transcript) -> str | None:
+    
+    def check_overlapping_exons(self, transcript: Transcript) -> str | None:
         """Check if any exons overlap (critical annotation error).
         
         Overlapping exons within the same transcript indicate a serious
@@ -179,12 +181,12 @@ class QCChecker:
                 return "overlapping_exons"
         
         return None
-     
+    
     # ========================================================================
     # CDS CHECKS
     # ========================================================================
 
-     def check_no_cds(self, transcript: Transcript) -> str | None:
+    def check_no_cds(self, transcript: Transcript) -> str | None:
         """Check if transcript has no coding sequence.
         
         Transcripts without CDS are typically non-coding RNAs (ncRNAs,
@@ -200,8 +202,8 @@ class QCChecker:
         if not transcript.has_cds:
             return "no_cds"
         return None
-     
-     def check_short_cds(self, transcript: Transcript) -> str | None:
+    
+    def check_short_cds(self, transcript: Transcript) -> str | None:
         """Check if CDS is unusually short.
         
         Very short CDS regions may indicate incomplete annotations,
@@ -217,8 +219,8 @@ class QCChecker:
         if transcript.has_cds and transcript.total_cds_length < self.min_cds_length:
             return "short_cds"
         return None
-     
-     def check_cds_not_divisible_by_3(self, transcript: Transcript) -> str | None:
+    
+    def check_cds_not_divisible_by_3(self, transcript: Transcript) -> str | None:
         """Check if CDS length is not divisible by 3.
         
         CDS length must be divisible by 3 to encode complete codons.
@@ -244,9 +246,8 @@ class QCChecker:
             return "cds_not_divisible_by_3"
         
         return None
-     
-
-     def check_cds_phase_inconsistent(self, transcript: Transcript) -> str | None:
+    
+    def check_cds_phase_inconsistent(self, transcript: Transcript) -> str | None:
         """Check if CDS phases are inconsistent across multiple CDS features.
         
         In a properly annotated transcript with multiple CDS features
