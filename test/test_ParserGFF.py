@@ -54,3 +54,24 @@ def test_exon_parsing_fallback(parser):
     feature = TestFeatureGFF(attributes={}, feature_id="gene3")
     gene_id = ParserGFF._get_id(feature)
     assert gene_id == "gene3"
+
+
+def test_cds_parsing(parser):
+    transcripts = parser.parse_transcripts()
+    transcript = transcripts[0]
+
+    assert len(transcript.cds_features) == 3
+    assert transcript.cds_features[0].start == 10
+    assert transcript.cds_features[0].end == 20
+    assert transcript.cds_features[0].strand == "+"
+    assert transcript.cds_features[0].phase == 0
+
+    assert transcript.cds_features[1].start == 30
+    assert transcript.cds_features[1].end == 50
+    assert transcript.cds_features[1].strand == "+"
+    assert transcript.cds_features[1].phase == 2
+
+    assert transcript.cds_features[2].start == 60
+    assert transcript.cds_features[2].end == 75
+    assert transcript.cds_features[2].strand == "+"
+    assert transcript.cds_features[2].phase == 1
