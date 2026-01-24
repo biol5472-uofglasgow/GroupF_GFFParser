@@ -29,4 +29,4 @@ def iter_cds_sequences(fasta_file: str, transcript: Transcript) -> Iterator[str]
         if cds.phase is not None:
             sequence = sequence[cds.phase :]
 
-    yield str(sequence)
+        yield str(sequence)

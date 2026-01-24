@@ -28,7 +28,7 @@ def test_extract_gene_sequences(parser):
 def test_phase(parser):
     transcripts = parser.parse_transcripts()
     fasta_file = "test/testfasta.fasta"
-    transcript = transcripts[1]
+    transcript = transcripts[0]
     cds_parts = list(iter_cds_sequences(fasta_file, transcript))
 
     assert len(cds_parts[1]) == (50 - 30 + 1) - 2
@@ -37,7 +37,7 @@ def test_phase(parser):
 def test_full_transcript(parser):
     transcripts = parser.parse_transcripts()
     fasta_file = "test/testfasta.fasta"
-    transcript = transcripts[2]
+    transcript = transcripts[0]
     cds_parts = list(iter_cds_sequences(fasta_file, transcript))
 
     full_sequence = "".join(cds_parts)
