@@ -19,14 +19,14 @@ class QCChecker:
     
     def __init__(
         self,
-        max_exon_count: int = 100,
+        max_exon_count: int = 50,
         min_cds_length: int = 30,
         max_exon_length: int = 1000000,
     ) -> None:
         """Initialize QC checker with configurable thresholds.
         
         Args:
-            max_exon_count: Maximum reasonable number of exons (default: 100)
+            max_exon_count: Maximum reasonable number of exons (default: 50)
             min_cds_length: Minimum CDS length in base pairs (default: 30)
             max_exon_length: Maximum reasonable exon length (default: 1,000,000)
             
