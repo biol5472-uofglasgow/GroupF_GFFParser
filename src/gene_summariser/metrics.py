@@ -64,3 +64,23 @@ class MetricsCalculator:
             total_exon_length=transcript.total_exon_length,
             total_cds_length=transcript.total_cds_length if transcript.has_cds else None,
         )
+    
+    def calculate_summaries(self, transcripts: list[Transcript]) -> list[TranscriptSummary]:
+        """Calculate summaries for multiple transcripts.
+        
+        Convenience method for batch processing of transcripts.
+        
+        Args:
+            transcripts: List of transcripts to summarize
+            
+        Returns:
+            List of transcript summaries in the same order as input
+            
+        Example:
+            >>> calculator = MetricsCalculator()
+            >>> transcripts = [t1, t2, t3]
+            >>> summaries = calculator.calculate_summaries(transcripts)
+            >>> flagged = [s for s in summaries if s.flags]
+            >>> print(f"Found {len(flagged)} transcripts with issues")
+        """
+        return [self.calculate_transcript_summary(t) for t in transcripts]
