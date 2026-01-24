@@ -1,9 +1,11 @@
+from collections.abc import Iterator
+
 from Bio import SeqIO
 
 from gene_summariser.models import Transcript
 
 
-def extract_gene_sequences(fasta_file: str, transcript: Transcript) -> str:
+def iter_cds_sequences(fasta_file: str, transcript: Transcript) -> Iterator[str]:
     """
     Extracts gene sequences from a FASTA file from a Transcript object.
 
@@ -14,7 +16,6 @@ def extract_gene_sequences(fasta_file: str, transcript: Transcript) -> str:
     Returns:
         str: The extracted gene sequence.
     """
-    cds_sequence = []
     genome = SeqIO.to_dict(SeqIO.parse(fasta_file, "fasta"))
     for cds in transcript.cds_features:
         record = genome[cds.seqid]
@@ -28,7 +29,4 @@ def extract_gene_sequences(fasta_file: str, transcript: Transcript) -> str:
         if cds.phase is not None:
             sequence = sequence[cds.phase :]
 
-    cds_sequence.append(str(sequence))
-    cds_sequence = "".join(str(seq) for seq in cds_sequence)
-
-    return cds_sequence
+    yield str(sequence)
