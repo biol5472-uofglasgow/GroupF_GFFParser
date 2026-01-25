@@ -2,7 +2,14 @@ import argparse
 import os 
 import sys
 
-def main():
+
+from gene_summariser.parser import ParserGFF
+from gene_summariser.qc import QCChecker
+from gene_summariser.metrics import MetricsCalculator
+from gene_summariser.writer import OutputWriter
+from pathlib import path
+
+def main() -> None:
     parser = argparse.ArgumentParser(prog='QC CHECK ON GFF',description='This program takes a gff file and performs necessary QC checks on it to ensure that everything is correct.',formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("-g","--gff", required=True, help='please write the path of the gffFile here.')
     parser.add_argument("-f","--fasta",help='Optional ,please write the path of the genome fasta file here.')
@@ -11,4 +18,48 @@ def main():
     parser.add_argument("--strict",action="store_true",help="Fail execution if any QC warning is detected")
     parser.add_argument("--format",choices=["text", "csv", "json"],default="text",help="Output format for QC report")
 
-    return parser.parse_args()
+    args= parser.parse_args()
+
+    if not os.path.isfile(args.gff):
+        print(f"GFF file not found: {args.gff}")
+        SystemExit(1)
+    
+    if args.fasta and not os.path.isfile(args.fasta):
+        print(f"FASTA file not found: {args.fasta}")
+        SystemExit(1)
+
+    if not args.gff.endswith((".gff", ".gff3")):
+        print("Input file is not a GFF/GFF3 file")
+        SystemExit(1)
+
+    try:
+        print("Parsing GFF file...")
+        parser_gff = ParserGFF(args.gff)
+        transcripts = parser_gff.parse_transcripts()
+        print(f" Parsed{len(transcripts)} transcripts")
+
+        print("Running QC checks...")
+        qc_checker = QCChecker(fasta_file=args.fasta)
+
+        print("Calculating transcripts metrics and qc flags")
+        calculator= MetricsCalculator(qc_checker)
+        summaries=calculator.calculate_summaries(transcripts)
+
+        print("Writing output")
+        outdir=path(args.outdir)
+        writer=OutputWriter(outdir)
+        summary_path = writer.write_transcript_summary(summaries)
+        writer.write_provenance(input_file=Path(args.gff),parameters={"fasta": args.fasta,"strict": args.strict,},)
+        writer.write_qc_flags_gff3(transcripts, summaries)
+        writer.write_qc_flags_bed(transcripts, summaries)
+
+        print(f"  Transcript summary written to: {summary_path}")
+
+    except Exception as e:
+        print(f"Error:{e}")
+        SystemExit(1)
+    
+        
+
+    if not args.gff.endswith((".gff", ".gff3")):
+        sys.exit("Input file is not a GFF/GFF3 file")
