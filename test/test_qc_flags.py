@@ -1,5 +1,6 @@
 from typing import Literal
 
+from gene_summariser.models import CDS, Transcript
 import pytest
 
 from gene_summariser.models import CDS, Transcript
@@ -85,3 +86,31 @@ def test_stop_codon_flags(parser: ParserGFF):
     QC_checker = QCChecker("test/testfasta.fasta")
     flags = QC_checker.check_transcript(transcript)
     assert "missing_stop_codon" in flags
+
+
+def test_cds_phase_consistent_pass():
+    """
+    Transcript with correct CDS phase progression
+    should NOT be flagged.
+    """
+    cds_features = [
+        CDS(seqid="chr1", start=1, end=100, strand="+", phase=0),
+        CDS(seqid="chr1", start=201, end=300, strand="+", phase=1),  # CORRECT
+    ]
+
+    transcript = Transcript(
+        transcript_id="tx_pass",
+        gene_id="gene1",
+        seqid="chr1",
+        start=1,
+        end=300,
+        strand="+",
+        exons=[],
+        cds_features=cds_features,
+        attributes={},
+    )
+
+    qc_checker = QCChecker(fasta_file=None)
+    flags = qc_checker.check_transcript(transcript)
+
+    assert "cds_phase_inconsistent" not in flags
