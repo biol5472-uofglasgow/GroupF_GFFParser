@@ -312,6 +312,8 @@ class QCChecker:
         return None
 
     def check_start_codon(self, transcript: Transcript) -> str | None:
+        if not self.fasta_file:
+            return None
         start_codons = {"ATG", "GTG", "TTG"}
         if transcript.has_cds:
             full_sequence = get_full_sequence(self.fasta_file, transcript)
@@ -321,6 +323,8 @@ class QCChecker:
         return None
 
     def check_stop_codon(self, transcript: Transcript) -> str | None:
+        if not self.fasta_file:
+                return None
         stop_codons = {"TAA", "TAG", "TGA"}
         if transcript.has_cds:
             full_sequence = get_full_sequence(self.fasta_file, transcript)
