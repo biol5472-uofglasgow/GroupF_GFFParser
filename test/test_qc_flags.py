@@ -72,12 +72,14 @@ def test_cds_phase_consistent_pass():
     Transcript with correct CDS phase progression
     should NOT be flagged.
     """
-    cds_features = [
+    qc_checker = QCChecker(fasta_file=None)
+    
+    correct_cds= [
         CDS(seqid="chr1", start=1, end=100, strand="+", phase=0),
         CDS(seqid="chr1", start=201, end=300, strand="+", phase=1),  # CORRECT
     ]
 
-    transcript = Transcript(
+    correct_transcript = Transcript(
         transcript_id="tx_pass",
         gene_id="gene1",
         seqid="chr1",
@@ -85,11 +87,29 @@ def test_cds_phase_consistent_pass():
         end=300,
         strand="+",
         exons=[],
-        cds_features=cds_features,
+        cds_features=correct_cds,
         attributes={},
     )
 
-    qc_checker = QCChecker(fasta_file=None)
-    flags = qc_checker.check_transcript(transcript)
+    
+    flags_correct = qc_checker.check_transcript(correct_transcript)
+    assert "cds_phase_inconsistent" not in flags_correct
 
-    assert "cds_phase_inconsistent" not in flags
+    wrong_cds = [
+        CDS(seqid="chr1", start=1, end=100, strand="+", phase=0),
+        CDS(seqid="chr1", start=201, end=300, strand="+", phase=0),  # wrong
+    ]
+    wrong_transcript = Transcript(
+        transcript_id="tx_bad",
+        gene_id="gene1",
+        seqid="chr1",
+        start=1,
+        end=300,
+        strand="+",
+        exons=[],
+        cds_features=wrong_cds,
+        attributes={},
+    )
+
+    flags_bad = qc_checker.check_transcript(wrong_transcript)
+    assert "cds_phase_inconsistent" in flags_bad
