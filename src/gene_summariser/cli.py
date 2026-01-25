@@ -55,11 +55,18 @@ def main() -> None:
 
         print(f"  Transcript summary written to: {summary_path}")
 
+        if args.strict:
+            n_flagged = sum(1 for s in summaries if s.flags)
+            if n_flagged > 0:
+                print(f"ERROR: Strict mode enabled — {n_flagged} transcripts have QC issues",file=sys.stderr,)
+                sys.exit(2)
+
+        print("QC checks completed")
+
+    
     except Exception as e:
         print(f"Error:{e}")
         SystemExit(1)
     
-        
-
-    if not args.gff.endswith((".gff", ".gff3")):
-        sys.exit("Input file is not a GFF/GFF3 file")
+if __name__ == "__main__":
+    main()
