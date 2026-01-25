@@ -1,6 +1,9 @@
+from typing import Literal
+
 from gene_summariser.models import CDS, Transcript
 import pytest
 
+from gene_summariser.models import CDS, Transcript
 from gene_summariser.parser import ParserGFF
 from gene_summariser.qc import QCChecker
 
@@ -11,47 +14,61 @@ class TestFeatureGFF:
         self.id = feature_id
 
 
+# Set up fixtures for GFF file and parser
 @pytest.fixture
 def gff_file():
     return "test/models.gff3"
 
 
 @pytest.fixture
-def parser(gff_file):
+def parser(gff_file: Literal["test/models.gff3"]):
     return ParserGFF(gff_file)
 
 
-# def test_divisable_by_three(parser):
-#     transcripts = parser.parse_transcripts()
-#     QC_checker = QCChecker('test/')
+def test_divisable_by_three(parser: ParserGFF):
+    """
+    Unit test for the following condition:
+    - A transcript with CDS features that are all divisible by 3 does not have the "cds_not_divisible_by_3" flag.
+    - A transcript with no CDS features does not have the "cds_not_divisible_by_3" flag.
+    """
+    transcripts = parser.parse_transcripts()
+    QC_checker = QCChecker("test/testfasta.fasta")
 
-#     assert "CDS_NOT_DEVISABLE_BY_3" not in summaries[0].flags
-#     assert "CDS_NOT_DEVISABLE_BY_3" not in summaries[1].flags
-
-
-# def test_divisable_not_divisable_by_three():
-#     cds_features_fail = [
-#         CDS(seqid="chr1", start=1, end=10, strand="+"),
-#         CDS(seqid="chr1", start=11, end=14, strand="+"),
-#     ]
-#     transcript = Transcript(
-#         transcript_id="fail_test",
-#         gene_id="ID1",
-#         seqid="chr1",
-#         start=1,
-#         end=100,
-#         strand="+",
-#         exons=[],
-#         cds_features=cds_features_fail,
-#         attributes={},
-#     )
-
-#     transcripts = [transcript]
-#     summaries = append_flags_to_summary(transcripts)
-#     assert "CDS_NOT_DEVISABLE_BY_3" in summaries[0].flags
+    assert "cds_not_divisible_by_3" not in QC_checker.check_transcript(transcripts[0])
+    assert "cds_not_divisible_by_3" not in QC_checker.check_transcript(transcripts[1])
 
 
-def test_no_start_codon_flag(parser):
+def test_divisable_not_divisable_by_three():
+    """
+    Unit test for the following condition:
+    - A transcript with CDS features that are not all divisible by 3 has the "cds_not_divisible_by_3" flag.
+    """
+    QC_checker = QCChecker("test/testfasta.fasta")
+
+    cds_features_fail = [
+        CDS(seqid="chr1", start=1, end=10, strand="+"),
+        CDS(seqid="chr1", start=11, end=14, strand="+"),
+    ]
+    transcript = Transcript(
+        transcript_id="fail_test",
+        gene_id="ID1",
+        seqid="chr1",
+        start=1,
+        end=100,
+        strand="+",
+        exons=[],
+        cds_features=cds_features_fail,
+        attributes={},
+    )
+
+    assert "cds_not_divisible_by_3" in QC_checker.check_transcript(transcript)
+
+
+def test_no_start_codon_flag(parser: ParserGFF):
+    """
+    Unit test for the following condition:
+    - A transcript with start codons present does not have the "no_start_codon" flag.
+    """
     transcripts = parser.parse_transcripts()
     transcript = transcripts[0]  # Transcript with no CDS features
     QC_checker = QCChecker("test/testfasta.fasta")
@@ -59,7 +76,11 @@ def test_no_start_codon_flag(parser):
     assert "no_start_codon" not in flags
 
 
-def test_stop_codon_flags(parser):
+def test_stop_codon_flags(parser: ParserGFF):
+    """
+    Unit test for the following condition:
+    - A transcript missing a stop codon has the "missing_stop_codon" flag.
+    """
     transcripts = parser.parse_transcripts()
     transcript = transcripts[0]  # Transcript with no CDS features
     QC_checker = QCChecker("test/testfasta.fasta")

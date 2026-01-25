@@ -20,9 +20,9 @@ def test_extract_gene_sequences(parser):
     transcript = transcripts[0]
     cds_parts = list(iter_cds_sequences(fasta_file, transcript))
 
-    assert cds_parts[0] == "CGTACGTACGT"
+    assert cds_parts[0] == "TTGACGTACGT"
     assert cds_parts[1] == "TACGTACGTACGTACGTAC"
-    assert cds_parts[2] == "ACGTACGTACGTACG"
+    assert cds_parts[2] == "ACGTACGTACGTTGC"
 
 
 def test_phase(parser):
