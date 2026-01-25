@@ -11,4 +11,12 @@ chr1	fixture	CDS	60	75	.	+	1	ID=tx1_cds3;Parent=tx1
 chr1	fixture	mRNA	5	80	.	+	.	ID=tx2;Parent=gene1;Name=GeneOne-002
 chr1	fixture	exon	5	25	.	+	.	ID=tx2_ex1;Parent=tx2
 chr1	fixture	exon	40	80	.	+	.	ID=tx2_ex2;Parent=tx2
+
+chrFixture1	fixture	gene	1	1783	.	+	.	ID=PF3D7_1314600;Name=LipL1;description=lipoate-protein ligase 1
+chrFixture1	fixture	mRNA	1	1783	.	+	.	ID=PF3D7_1314600.1;Parent=PF3D7_1314600
+chrFixture1	fixture	exon	1	1783	.	+	.	ID=exon_PF3D7_1314600.1-E1;Parent=PF3D7_1314600.1
+chrFixture1	fixture	CDS	276	477	.	+	0	ID=PF3D7_1314600.1-CDS1;Parent=PF3D7_1314600.1
+chrFixture1	fixture	CDS	478	679	.	+	2	ID=PF3D7_1314600.1-CDS2;Parent=PF3D7_1314600.1
+chrFixture1	fixture	CDS	680	1502	.	+	1	ID=PF3D7_1314600.1-CDS3;Parent=PF3D7_1314600.1
+
 # tx2 deliberately has no CDS features (edge case)
