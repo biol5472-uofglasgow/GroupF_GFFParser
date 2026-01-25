@@ -20,12 +20,12 @@ def parser(gff_file):
     return ParserGFF(gff_file)
 
 
-# def test_divisable_by_three(parser):
-#     transcripts = parser.parse_transcripts()
-#     QC_checker = QCChecker('test/')
+def test_divisable_by_three(parser):
+    transcripts = parser.parse_transcripts()
+    QC_checker = QCChecker("test/testfasta.fasta")
 
-#     assert "CDS_NOT_DEVISABLE_BY_3" not in summaries[0].flags
-#     assert "CDS_NOT_DEVISABLE_BY_3" not in summaries[1].flags
+    assert "CDS_NOT_DEVISABLE_BY_3" not in QC_checker.check_transcript(transcripts[0])
+    assert "CDS_NOT_DEVISABLE_BY_3" not in QC_checker.check_transcript(transcripts[1])
 
 
 # def test_divisable_not_divisable_by_three():
