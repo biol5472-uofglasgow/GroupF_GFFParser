@@ -338,6 +338,18 @@ class QCChecker:
         return None
 
     def check_stop_codon(self, transcript: Transcript) -> str | None:
+        """
+        Check if the transcript's CDS ends with a valid stop codon.
+
+        For all protein coding genes, the CDS should end with a stop codon (TAA, TAG, or TGA).
+        This flag will highlight transcripts that do not meet this criteria,
+        indicating a potential annotation error or incomplete CDS.
+        
+        Note:
+        - This check is only meaningful for protein-coding transcripts.
+        - Non-coding RNAs (e.g. mRNA fragments, lncRNA, tRNA, rRNA) are not expected
+        to contain stop codons and should be excluded upstream.
+        """
         if not self.genome or not transcript.has_cds:
                 return None
         stop_codons = {"TAA", "TAG", "TGA"}
