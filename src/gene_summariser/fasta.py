@@ -33,7 +33,7 @@ def iter_cds_sequences(fasta_file: str, transcript: Transcript) -> Iterator[str]
         yield str(sequence)
 
 
-def get_full_sequence(fasta_file: str, transcript: Transcript) -> str:
+def get_full_sequence(genome: dict[str, Seq], transcript: Transcript) -> str:
     """
     Extract the full spliced CDS (no phase),
     suitable for start/stop codon QC.
@@ -44,8 +44,6 @@ def get_full_sequence(fasta_file: str, transcript: Transcript) -> str:
         str: The full spliced CDS sequence.
     """
     seq_chunks: list[Seq] = []
-
-    genome = SeqIO.to_dict(SeqIO.parse(fasta_file, "fasta"))
 
     for cds in transcript.cds_features:
         record = genome[cds.seqid]
