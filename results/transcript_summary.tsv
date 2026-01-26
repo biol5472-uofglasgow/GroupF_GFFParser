@@ -1,4 +1,0 @@
-gene_id	transcript_id	n_exons	has_cds	flags
-PF3D7_1314600	PF3D7_1314600.1	1	True	cds_phase_inconsistent,missing_start_codon,missing_stop_codon,single_exon
-gene1	tx1	3	True	cds_phase_inconsistent,missing_stop_codon
-gene1	tx2	2	False	no_cds
