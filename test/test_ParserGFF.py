@@ -11,7 +11,7 @@ class TestFeatureGFF:
 
 @pytest.fixture
 def gff_file():
-    return "test/models.gff3"
+    return "test/fixtures/models.gff3"
 
 
 @pytest.fixture
