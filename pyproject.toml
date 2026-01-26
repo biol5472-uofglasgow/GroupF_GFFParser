@@ -20,6 +20,7 @@ classifiers = [
 dependencies = [
     "gffutils>=0.12",
     "pandas>=2.0",
+    "biopython>=1.80",
 ]
 
 [project.optional-dependencies]
