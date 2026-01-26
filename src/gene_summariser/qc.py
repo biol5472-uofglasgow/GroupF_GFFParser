@@ -324,7 +324,10 @@ class QCChecker:
         this flag will highlight transcripts that do not meet this criteria, 
         indicating a potential annotation error or incomplete CDS.
 
-        Note: Some transcripts may not have start codons due to being mRNA, tRNA, or other non-coding RNA types.
+        Note:
+        - This check is only meaningful for protein-coding transcripts.
+        - Non-coding RNAs (e.g. mRNA fragments, lncRNA, tRNA, rRNA) are not expected
+        to contain start codons and should be excluded upstream.
         """
         if not self.genome or not transcript.has_cds:
             return None
