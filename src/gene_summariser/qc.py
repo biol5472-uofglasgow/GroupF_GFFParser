@@ -317,6 +317,15 @@ class QCChecker:
         return None
 
     def check_start_codon(self, transcript: Transcript) -> str | None:
+        """
+        Check if the transcript's CDS starts with a valid start codon.
+
+        For all protein coding genes, the CDS should begin with a start codon (ATG, GTG, or TTG).
+        this flag will highlight transcripts that do not meet this criteria, 
+        indicating a potential annotation error or incomplete CDS.
+
+        Note: Some transcripts may not have start codons due to being mRNA, tRNA, or other non-coding RNA types.
+        """
         if not self.genome or not transcript.has_cds:
             return None
         start_codons = {"ATG", "GTG", "TTG"}
