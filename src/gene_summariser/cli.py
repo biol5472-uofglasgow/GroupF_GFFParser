@@ -7,7 +7,7 @@ from gene_summariser.parser import ParserGFF
 from gene_summariser.qc import QCChecker
 from gene_summariser.metrics import MetricsCalculator
 from gene_summariser.writer import OutputWriter
-from pathlib import path
+from pathlib import Path
 
 def main() -> None:
     parser = argparse.ArgumentParser(prog='QC CHECK ON GFF',description='This program takes a gff file and performs necessary QC checks on it to ensure that everything is correct.',formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -17,6 +17,10 @@ def main() -> None:
     parser.add_argument("--log",default="qc.log",help="Log file for detailed execution info")
     parser.add_argument("--strict",action="store_true",help="Fail execution if any QC warning is detected")
     parser.add_argument("--format",choices=["text", "csv", "json"],default="text",help="Output format for QC report")
+    parser.add_argument(
+    "--outdir",
+    default="results",
+    help="Output directory for all generated files")
 
     args= parser.parse_args()
 
@@ -46,7 +50,7 @@ def main() -> None:
         summaries=calculator.calculate_summaries(transcripts)
 
         print("Writing output")
-        outdir=path(args.outdir)
+        outdir=Path(args.outdir)
         writer=OutputWriter(outdir)
         summary_path = writer.write_transcript_summary(summaries)
         writer.write_provenance(input_file=Path(args.gff),parameters={"fasta": args.fasta,"strict": args.strict,},)
