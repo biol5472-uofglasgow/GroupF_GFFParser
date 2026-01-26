@@ -208,3 +208,8 @@ __marimo__/
 
 # Vscode
 .vscode
+
+# Real Fixture data
+test\fixtures\PlasmoDB-54_Pfalciparum3D7_Genome.fasta
+test\fixtures\PlasmoDB-54_Pfalciparum3D7.gff
+
