@@ -1,0 +1,12 @@
+{
+  "tool": "gene-summariser",
+  "version": "0.1.0",
+  "timestamp": "2026-01-26T14:12:21.955007",
+  "inputs": {
+    "gff3_file": "/Users/callumpoole/Documents/Masters/git-repositorys/GroupF_GFFParser/test/models.gff3"
+  },
+  "parameters": {
+    "fasta": "test/testfasta.fasta",
+    "strict": false
+  }
+}

@@ -6,7 +6,7 @@ from gene_summariser.parser import ParserGFF
 
 @pytest.fixture
 def gff_file():
-    return "test/models.gff3"
+    return "test/fixtures/models.gff3"
 
 
 @pytest.fixture
@@ -16,7 +16,7 @@ def parser(gff_file):
 
 def test_extract_gene_sequences(parser):
     transcripts = parser.parse_transcripts()
-    fasta_file = "test/testfasta.fasta"
+    fasta_file = "test/fixtures/testfasta.fasta"
     transcript = transcripts[0]
     cds_parts = list(iter_cds_sequences(fasta_file, transcript))
 
@@ -27,7 +27,7 @@ def test_extract_gene_sequences(parser):
 
 def test_phase(parser):
     transcripts = parser.parse_transcripts()
-    fasta_file = "test/testfasta.fasta"
+    fasta_file = "test/fixtures/testfasta.fasta"
     transcript = transcripts[0]
     cds_parts = list(iter_cds_sequences(fasta_file, transcript))
 
@@ -36,7 +36,7 @@ def test_phase(parser):
 
 def test_full_transcript(parser):
     transcripts = parser.parse_transcripts()
-    fasta_file = "test/testfasta.fasta"
+    fasta_file = "test/fixtures/testfasta.fasta"
     transcript = transcripts[0]
     cds_parts = list(iter_cds_sequences(fasta_file, transcript))
 
