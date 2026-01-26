@@ -4,6 +4,7 @@ from collections.abc import Callable
 
 from gene_summariser.fasta import get_full_sequence
 from gene_summariser.models import Transcript
+from Bio import SeqIO
 
 
 class QCChecker:
@@ -26,6 +27,10 @@ class QCChecker:
         max_exon_length: int = 1000000,
     ) -> None:
         self.fasta_file = fasta_file
+        self.genome = None
+
+        if fasta_file:
+            self.genome = SeqIO.to_dict(SeqIO.parse(fasta_file, "fasta"))
         """Initialize QC checker with configurable thresholds.
 
         Args:
