@@ -1,7 +1,8 @@
 import pytest
 
-from gene_summariser.fasta import iter_cds_sequences
-from gene_summariser.parser import ParserGFF
+from Bio import SeqIO
+from gene_summariser.parser import ParserGFF\
+from gene_summariser.fasta import get_full_sequence
 
 
 @pytest.fixture
@@ -16,13 +17,19 @@ def parser(gff_file):
 
 def test_extract_gene_sequences(parser):
     transcripts = parser.parse_transcripts()
-    fasta_file = "test/fixtures/testfasta.fasta"
     transcript = transcripts[0]
-    cds_parts = list(iter_cds_sequences(fasta_file, transcript))
+    genome = {
+        record.id: record
+        for record in SeqIO.parse("test/fixtures/testfasta.fasta", "fasta")
+    }
 
-    assert cds_parts[0] == "TTGACGTACGT"
-    assert cds_parts[1] == "TACGTACGTACGTACGTAC"
-    assert cds_parts[2] == "ACGTACGTACGTTGC"
+    full_cds = get_full_sequence(genome, transcript)
+
+    assert full_cds == (
+        "TTGACGTACGT"
+        "TACGTACGTACGTACGTAC"
+        "ACGTACGTACGTTGC"
+    )
 
 
 def test_phase(parser):
