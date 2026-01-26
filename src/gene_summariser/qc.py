@@ -317,23 +317,19 @@ class QCChecker:
         return None
 
     def check_start_codon(self, transcript: Transcript) -> str | None:
-        if not self.fasta_file:
+        if not self.genome or not transcript.has_cds:
             return None
         start_codons = {"ATG", "GTG", "TTG"}
-        if transcript.has_cds:
-            full_sequence = get_full_sequence(self.fasta_file, transcript)
-            start = full_sequence[:3].upper()
-            if start not in start_codons:
-                return "missing_start_codon"
+        full_sequence = get_full_sequence(self.genome, transcript)
+        if full_sequence[:3].upper() not in start_codons:
+            return "missing_start_codon"
         return None
 
     def check_stop_codon(self, transcript: Transcript) -> str | None:
-        if not self.fasta_file:
+        if not self.genome or not transcript.has_cds:
                 return None
         stop_codons = {"TAA", "TAG", "TGA"}
-        if transcript.has_cds:
-            full_sequence = get_full_sequence(self.fasta_file, transcript)
-            stop = full_sequence[-3:].upper()
-            if stop not in stop_codons:
-                return "missing_stop_codon"
+        full_sequence = get_full_sequence(self.genome, transcript)
+        if full_sequence[-3:].upper() not in stop_codons:
+            return "missing_stop_codon"
         return None
