@@ -37,6 +37,8 @@ class QCChecker:
             max_exon_count: Maximum reasonable number of exons (default: 50)
             min_cds_length: Minimum CDS length in base pairs (default: 30)
             max_exon_length: Maximum reasonable exon length (default: 1,000,000)
+            self.fasta_file: Path to the FASTA file for sequence-based checks
+            self.genome: Dictionary of sequences from the FASTA file
 
         Example:
             >>> # Strict checking
@@ -344,7 +346,7 @@ class QCChecker:
         For all protein coding genes, the CDS should end with a stop codon (TAA, TAG, or TGA).
         This flag will highlight transcripts that do not meet this criteria,
         indicating a potential annotation error or incomplete CDS.
-        
+
         Note:
         - This check is only meaningful for protein-coding transcripts.
         - Non-coding RNAs (e.g. mRNA fragments, lncRNA, tRNA, rRNA) are not expected
