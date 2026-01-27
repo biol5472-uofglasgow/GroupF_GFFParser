@@ -1,0 +1,12 @@
+{
+  "tool": "gene-summariser",
+  "version": "0.1.0",
+  "timestamp": "2026-01-26T15:24:12.416412",
+  "inputs": {
+    "gff3_file": "/Users/macbookpro2020/Sites/GroupF_GFFParser/test/fixtures/models.gff3"
+  },
+  "parameters": {
+    "fasta": "test/fixtures/testfasta.fasta",
+    "strict": false
+  }
+}
