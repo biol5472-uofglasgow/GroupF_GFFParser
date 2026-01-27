@@ -26,9 +26,12 @@ class PieChart:
     def _process_transcripts(
         self, transcripts: list[TranscriptSummary]
     ) -> dict[str, int]:
-        flag_counts: dict[str, int] = {}
+        flag_counts: dict[str, int] = {"no_flag": 0}
 
         for transcript in transcripts:
+            if not transcript.flags:
+                flag_counts["no_flag"] += 1
+                continue
             for flag in transcript.flags:
                 if flag in flag_counts:
                     flag_counts[flag] += 1
