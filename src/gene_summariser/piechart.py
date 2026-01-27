@@ -1,5 +1,9 @@
 from pathlib import Path
 
+import matplotlib
+
+matplotlib.use("Agg")  # MUST come before pyplot
+
 import matplotlib.pyplot as plt
 
 from gene_summariser.models import TranscriptSummary
@@ -40,7 +44,7 @@ class PieChart:
 
         return flag_counts
 
-    def generate_pie_chart(self):
+    def generate_pie_chart(self) -> None:
         labels = list(self.data.keys())
         values = list(self.data.values())
 
