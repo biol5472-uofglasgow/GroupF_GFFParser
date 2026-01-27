@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  gene-summariser:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: gene-summariser:latest
+    container_name: gene-summariser-app
+    volumes:
+      # Mount local data directories
+      - ./data:/data
+      - ./results:/app/results
+    environment:
+      - PYTHONUNBUFFERED=1
+    # Override default command
+    # Example: Run on sample data
+    command: >
+      --gff /data/annotations.gff3
+      --fasta /data/genome.fasta
+      --outdir /app/results
+    # For interactive use, comment out command and use:
+    # stdin_open: true
+    # tty: true
+    # entrypoint: /bin/bash
+
+  # Optional: Development container with tests
+  gene-summariser-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    image: gene-summariser:dev
+    container_name: gene-summariser-dev
+    volumes:
+      - .:/app
+      - /app/.pytest_cache
+      - /app/htmlcov
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: pytest --cov=gene_summariser --cov-report=html
