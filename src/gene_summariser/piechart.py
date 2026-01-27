@@ -42,9 +42,17 @@ class PieChart:
         values = list(self.data.values())
 
         plt.figure(figsize=(8, 8))
-        plt.pie(values, labels=labels)
+        plt.pie(values, startangle=90)
+        plt.legend(
+            labels,
+            loc="center left",
+            bbox_to_anchor=(1, 0.5),
+        )
         plt.title(self.title)
         plt.axis("equal")
 
-        plt.savefig(self.output_dir / self.output_file)
+        plt.savefig(
+            self.output_dir / self.output_file,
+            bbox_inches="tight",
+        )
         plt.close()
