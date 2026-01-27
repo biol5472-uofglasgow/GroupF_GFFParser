@@ -8,17 +8,21 @@ services:
     image: gene-summariser:latest
     container_name: gene-summariser-app
     volumes:
-      # Mount local data directories
-      - ./data:/data
+      # Mount test data from fixtures (or change to ./data for your own files)
+      - ./tests/fixtures:/data
       - ./results:/app/results
     environment:
       - PYTHONUNBUFFERED=1
     # Override default command
-    # Example: Run on sample data
+    # Example: Run on test data
     command: >
-      --gff /data/annotations.gff3
-      --fasta /data/genome.fasta
+      --gff /data/models.gff3
+      --fasta /data/testfasta.fasta
       --outdir /app/results
+    # For your own data, change volumes to:
+    # - ./data:/data
+    # And update the command accordingly
+    
     # For interactive use, comment out command and use:
     # stdin_open: true
     # tty: true
