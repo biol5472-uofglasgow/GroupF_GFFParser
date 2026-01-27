@@ -7,7 +7,7 @@ name = "gene-summariser"
 version = "0.1.0"
 description = "A tool for summarising gene models and reporting QC metrics"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.9"
 authors = [
     {name = " BIOL5472_GROUP_F", email = "your.email@glasgow.ac.uk"}
 ]
@@ -20,7 +20,7 @@ classifiers = [
 dependencies = [
     "gffutils>=0.12",
     "pandas>=2.0",
-    "biopython>=1.80",
+    "biopython>=1.86",
 ]
 
 [project.optional-dependencies]
