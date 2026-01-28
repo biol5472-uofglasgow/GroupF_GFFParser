@@ -1,4 +1,4 @@
 ##gff-version 3
-chr1	gene_summariser	transcript	5	80	.	+	.	ID=tx1;Parent=gene1;qc_flags=cds_phase_inconsistent,missing_stop_codon
+chr1	gene_summariser	transcript	5	80	.	+	.	ID=tx1;Parent=gene1;qc_flags=cds_phase_inconsistent
 chr1	gene_summariser	transcript	5	80	.	+	.	ID=tx2;Parent=gene1;qc_flags=no_cds
-chrFixture1	gene_summariser	transcript	1	1783	.	+	.	ID=PF3D7_1314600.1;Parent=PF3D7_1314600;qc_flags=cds_phase_inconsistent,missing_start_codon,missing_stop_codon,single_exon
+chrFixture1	gene_summariser	transcript	1	1783	.	+	.	ID=PF3D7_1314600.1;Parent=PF3D7_1314600;qc_flags=cds_phase_inconsistent,single_exon
