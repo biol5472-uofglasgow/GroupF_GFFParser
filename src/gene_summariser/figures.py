@@ -145,3 +145,41 @@ class ExonCountHistogram:
         plt.grid(axis="y", alpha=0.75)
         plt.savefig(self.output_dir / self.output_file)
         plt.close()
+
+
+class CDSLengthHistogram:
+    """
+    Generate a histogram showing the distribution of CDS lengths across transcripts.
+    """
+
+    def __init__(
+        self,
+        transcripts: list[TranscriptSummary],
+        title="CDS Length Distribution",
+        output_file="cds_length_distribution.png",
+        output_dir: Path = Path("."),
+    ):
+        self.cds_lengths = [
+            transcript.total_cds_length
+            for transcript in transcripts
+            if transcript.total_cds_length is not None
+            and transcript.total_cds_length > 0
+        ]
+        self.title = title
+        self.output_file = output_file
+        self.output_dir = output_dir
+
+    def generate_histogram(self) -> None:
+        plt.figure(figsize=(8, 6))
+        plt.hist(
+            self.cds_lengths,
+            edgecolor="black",
+            alpha=0.7,
+        )
+        plt.xlabel("CDS Length")
+        plt.ylabel("Number of Transcripts")
+        plt.title(self.title)
+        # Adding a grid and setting its transparency
+        plt.grid(axis="y", alpha=0.75)
+        plt.savefig(self.output_dir / self.output_file)
+        plt.close()
