@@ -3,7 +3,12 @@ import os
 import sys
 from pathlib import Path
 
-from gene_summariser.figures import ExonCountHistogram, FlaggedBarChart, PieChart
+from gene_summariser.figures import (
+    CDSLengthHistogram,
+    ExonCountHistogram,
+    FlaggedBarChart,
+    PieChart,
+)
 from gene_summariser.metrics import MetricsCalculator
 
 # importing required modules from the gene_summariser package
@@ -123,6 +128,9 @@ def main() -> None:
 
         flagged_bar_chart = FlaggedBarChart(summaries, output_dir=outdir)
         flagged_bar_chart.generate_bar_plot()
+
+        cds_length_histogram = CDSLengthHistogram(summaries, output_dir=outdir)
+        cds_length_histogram.generate_histogram()
 
         print(f"  Transcript summary written to: {summary_path}")
 
