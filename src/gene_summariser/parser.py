@@ -89,7 +89,7 @@ class ParserGFF:
         else:
             gene_id = feature.id.split(".")[0]
 
-        return gene_id
+        return str(gene_id)
 
     def _get_exons(self, transcript_feature: gffutils.Feature) -> list[Exon]:
         """
