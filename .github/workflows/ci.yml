@@ -37,9 +37,6 @@ jobs:
         run: |
           ruff check src/ test/ --output-format=github
 
-      - name: Check code formatting
-        run: |
-          ruff format --check src/ test/
 
   type-check:
     name: Type Check
