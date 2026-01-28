@@ -1,7 +1,6 @@
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 
-
 from gene_summariser.models import Transcript
 
 
