@@ -21,7 +21,7 @@ def parser(gff_file):
 
 def test_number_transcripts(parser):
     transcripts = parser.parse_transcripts()
-    assert len(transcripts) == 2
+    assert len(transcripts) == 3
 
 
 def test_correct_feilds(parser):
