@@ -1,13 +1,14 @@
 import argparse
-import os 
+import os
 import sys
+from pathlib import Path
 
 #importing required modules from the gene_summariser package
 from gene_summariser.parser import ParserGFF
+from gene_summariser.piechart import PieChart
 from gene_summariser.qc import QCChecker
-from gene_summariser.metrics import MetricsCalculator
 from gene_summariser.writer import OutputWriter
-from pathlib import Path
+
 
 def main() -> None:
     """
@@ -39,11 +40,30 @@ def main() -> None:
     # Output format option
     parser.add_argument("--format",choices=["text", "csv", "json"],default="text",help="Output format for QC report")
     parser.add_argument(
-    "--outdir",
-    default="results",
-    help="Output directory for all generated files")
+        "-o",
+        "--output",
+        default="qc_report.txt",
+        help="Output QC report file (default: qc_report.txt)",
+    )
+    parser.add_argument(
+        "--log", default="qc.log", help="Log file for detailed execution info"
+    )
+    parser.add_argument(
+        "--strict",
+        action="store_true",
+        help="Fail execution if any QC warning is detected",
+    )
+    parser.add_argument(
+        "--format",
+        choices=["text", "csv", "json"],
+        default="text",
+        help="Output format for QC report",
+    )
+    parser.add_argument(
+        "--outdir", default="results", help="Output directory for all generated files"
+    )
 
-    args= parser.parse_args()
+    args = parser.parse_args()
 
 
 
@@ -51,7 +71,7 @@ def main() -> None:
     if not os.path.isfile(args.gff):
         print(f"GFF file not found: {args.gff}")
         SystemExit(1)
-    
+
     if args.fasta and not os.path.isfile(args.fasta):
         print(f"FASTA file not found: {args.fasta}")
         SystemExit(1)
@@ -71,16 +91,25 @@ def main() -> None:
         qc_checker = QCChecker(fasta_file=args.fasta)
 
         print("Calculating transcripts metrics and qc flags")
-        calculator= MetricsCalculator(qc_checker)
-        summaries=calculator.calculate_summaries(transcripts)
+        calculator = MetricsCalculator(qc_checker)
+        summaries = calculator.calculate_summaries(transcripts)
 
         print("Writing output")
-        outdir=Path(args.outdir)
-        writer=OutputWriter(outdir)
+        outdir = Path(args.outdir)
+        writer = OutputWriter(outdir)
         summary_path = writer.write_transcript_summary(summaries)
-        writer.write_provenance(input_file=Path(args.gff),parameters={"fasta": args.fasta,"strict": args.strict,},)
+        writer.write_provenance(
+            input_file=Path(args.gff),
+            parameters={
+                "fasta": args.fasta,
+                "strict": args.strict,
+            },
+        )
         writer.write_qc_flags_gff3(transcripts, summaries)
         writer.write_qc_flags_bed(transcripts, summaries)
+
+        pie_chart = PieChart(summaries, output_dir=outdir)
+        pie_chart.generate_pie_chart()
 
         print(f"  Transcript summary written to: {summary_path}")
 
@@ -94,10 +123,10 @@ def main() -> None:
 
         print("QC checks completed")
 
-    
     except Exception as e:
         print(f"Error:{e}")
         SystemExit(1)
-    
+
+
 if __name__ == "__main__":
     main()
