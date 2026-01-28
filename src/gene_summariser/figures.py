@@ -87,7 +87,7 @@ class FlaggedBarChart:
             self, transcripts: list[TranscriptSummary]) -> dict[str, int]:
         counts = {"flagged": 0, "unflagged": 0}
         for transcript in transcripts:
-            if transcript.flags:    
+            if transcript.flags:
                 counts["flagged"] += 1
             else:
                 counts["unflagged"] += 1
