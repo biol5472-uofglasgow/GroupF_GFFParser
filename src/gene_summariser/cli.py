@@ -87,7 +87,9 @@ def main() -> None:
         if args.strict:
             n_flagged = sum(1 for s in summaries if s.flags)
             if n_flagged > 0:
-                print(f"ERROR: Strict mode enabled — {n_flagged} transcripts have QC issues",file=sys.stderr,)
+                print(f"ERROR: Strict mode failed — {n_flagged} transcripts have QC issues.\n"
+                      "Inspect 'transcript_summary.tsv' or 'qc_flags.gff3' for details.\n"
+                       "Run without --strict to generate reports without failing." ,file=sys.stderr,)
                 sys.exit(2)
 
         print("QC checks completed")
