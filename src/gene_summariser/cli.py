@@ -3,11 +3,16 @@ import os
 import sys
 from pathlib import Path
 
+from gene_summariser.figures import (
+    CDSLengthHistogram,
+    ExonCountHistogram,
+    FlaggedBarChart,
+    PieChart,
+)
 from gene_summariser.metrics import MetricsCalculator
 
 # importing required modules from the gene_summariser package
 from gene_summariser.parser import ParserGFF
-from gene_summariser.piechart import PieChart
 from gene_summariser.qc import QCChecker
 from gene_summariser.writer import OutputWriter
 
@@ -69,26 +74,6 @@ def main() -> None:
         help="Output format for QC report",
     )
     parser.add_argument(
-        "-o",
-        "--output",
-        default="qc_report.txt",
-        help="Output QC report file (default: qc_report.txt)",
-    )
-    parser.add_argument(
-        "--log", default="qc.log", help="Log file for detailed execution info"
-    )
-    parser.add_argument(
-        "--strict",
-        action="store_true",
-        help="Fail execution if any QC warning is detected",
-    )
-    parser.add_argument(
-        "--format",
-        choices=["text", "csv", "json"],
-        default="text",
-        help="Output format for QC report",
-    )
-    parser.add_argument(
         "--outdir", default="results", help="Output directory for all generated files"
     )
 
@@ -137,6 +122,15 @@ def main() -> None:
 
         pie_chart = PieChart(summaries, output_dir=outdir)
         pie_chart.generate_pie_chart()
+
+        exon_histogram = ExonCountHistogram(summaries, output_dir=outdir)
+        exon_histogram.generate_histogram()
+
+        flagged_bar_chart = FlaggedBarChart(summaries, output_dir=outdir)
+        flagged_bar_chart.generate_bar_plot()
+
+        cds_length_histogram = CDSLengthHistogram(summaries, output_dir=outdir)
+        cds_length_histogram.generate_histogram()
 
         print(f"  Transcript summary written to: {summary_path}")
 
