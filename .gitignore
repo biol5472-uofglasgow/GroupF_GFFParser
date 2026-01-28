@@ -209,8 +209,7 @@ __marimo__/
 # Vscode
 .vscode
 
-#results of test runs
-results/
+
 
 # Real Fixture data
 test\fixtures\PlasmoDB-54_Pfalciparum3D7_Genome.fasta
