@@ -109,3 +109,39 @@ class FlaggedBarChart:
         plt.tight_layout()
         plt.savefig(self.output_dir / self.output_file)
         plt.close()
+
+
+class ExonCountHistogram:
+    """
+    Generate a histogram showing the distribution of exon counts across transcripts.
+    """
+
+    def __init__(
+        self,
+        transcripts: list[TranscriptSummary],
+        title="Exon Count Distribution",
+        output_file="exon_count_distribution.png",
+        output_dir: Path = Path("."),
+    ):
+        self.exon_counts = [transcript.n_exons for transcript in transcripts]
+        self.title = title
+        self.output_file = output_file
+        self.output_dir = output_dir
+
+    def generate_histogram(self) -> None:
+        plt.figure(figsize=(8, 6))
+        plt.hist(
+            self.exon_counts,
+            bins=range(1, max(self.exon_counts) + 2),
+            edgecolor="black",
+            alpha=0.7,
+        )
+        plt.xlabel("Number of Exons")
+        plt.ylabel("Number of Transcripts")
+        plt.title(self.title)
+        # Forcing x-ticks to be every integer exon count, instead of matplotlibs default
+        plt.xticks(range(1, max(self.exon_counts) + 1))
+        # Adding a grid and setting its transparency
+        plt.grid(axis="y", alpha=0.75)
+        plt.savefig(self.output_dir / self.output_file)
+        plt.close()
