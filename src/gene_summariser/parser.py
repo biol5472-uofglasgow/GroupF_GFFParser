@@ -1,5 +1,7 @@
+# Parser module for GFF files. parser.py
 import logging
 import os
+from typing import Iterator
 
 import gffutils
 
@@ -10,15 +12,17 @@ logger = logging.getLogger(__name__)
 
 class ParserGFF:
     """
-    PraserGFF provides the nessesary methods to parse a specified GFF file, extracting Gene, transcript, exon, and CDS information.
+    ParserGFF provides the necessary methods to parse a specified GFF file,
+    extracting Gene, transcript, exon, and CDS information.
 
     Attributes:
         gff_path (str): Path to the GFF file to be parsed.
         db (gffutils.FeatureDB): GFF database object for efficient querying of features.
 
     Methods:
-        parse_transcripts() -> list[Transcript]: Parses the GFF file and returns a list of Transcript objects, each containing associated exons and CDS features.
-        parse_genes() -> list[Gene]: Parses the GFF file and returns a list of Gene features. (To be implemented)
+        parse_transcripts() -> list[Transcript]: Parses the GFF file and returns
+            a list of Transcript objects, each containing associated exons and CDS features.
+        parse_genes() -> Iterator[Gene]: Parses the GFF file and yields Gene objects.
     """
 
     allowed_transcript_types = [
@@ -40,11 +44,16 @@ class ParserGFF:
             gff_path (str): Path to the GFF file to be parsed.
         Raises:
             FileNotFoundError: If the specified GFF file does not exist.
+            ValueError: If the GFF file cannot be parsed.
         """
         self.gff_path = gff_path
-        # Creating the database path from the GFF file path, this is used to both find or create the database.
+        
+        # Validate file exists
         if not os.path.exists(gff_path):
             raise FileNotFoundError(f"GFF3 file not found: {gff_path}")
+        
+        if not os.path.isfile(gff_path):
+            raise ValueError(f"Path is not a file: {gff_path}")
 
         try:
             self.db = gffutils.create_db(
@@ -60,15 +69,15 @@ class ParserGFF:
             raise ValueError(f"Error parsing GFF3 file {gff_path}: {str(e)}") from e
 
     @staticmethod
-    def _get_id(feature) -> str:
+    def _get_id(feature: gffutils.Feature) -> str:
         """
         Method to extract the ID from a feature, handling different possible attribute names.
+        
         Args:
             feature (gffutils.Feature): The feature from which to extract the ID.
         Returns:
             str: The extracted ID.
         """
-
         if "gene_id" in feature.attributes:
             gene_ids = feature.attributes["gene_id"]
             gene_id = gene_ids[0] if isinstance(gene_ids, list) else gene_ids
@@ -85,6 +94,7 @@ class ParserGFF:
     def _get_exons(self, transcript_feature: gffutils.Feature) -> list[Exon]:
         """
         Parses the exon features associated with a given transcript feature.
+        
         Args:
             transcript_feature (gffutils.Feature): The transcript feature for which to extract exons.
         Returns:
@@ -93,12 +103,12 @@ class ParserGFF:
         exons = []
         exon_children = list(self.db.children(transcript_feature, featuretype="exon"))
 
-        # This can be changed when doing flags, however for now its usful for testing that its caught, same goes for no CDS
         if not exon_children:
             logger.warning(
                 f"No exon features found for this transcript {transcript_feature.id}"
             )
 
+        # Sort by position, accounting for strand
         exon_children.sort(
             key=lambda x: x.start,
             reverse=(transcript_feature.strand == "-"),
@@ -121,6 +131,7 @@ class ParserGFF:
     def _get_cdss(self, transcript_feature: gffutils.Feature) -> list[CDS]:
         """
         Parses the CDS features associated with a given transcript feature.
+        
         Args:
             transcript_feature (gffutils.Feature): The transcript feature for which to extract CDS features.
         Returns:
@@ -130,37 +141,49 @@ class ParserGFF:
         cds_children = list(self.db.children(transcript_feature, featuretype="CDS"))
 
         if not cds_children:
-            logger.warning(
+            logger.debug(
                 f"No CDS features found for this transcript {transcript_feature.id}"
             )
 
+        # Sort by position, accounting for strand
         cds_children.sort(
             key=lambda x: x.start,
             reverse=(transcript_feature.strand == "-"),
         )
 
         for cds in cds_children:
+            # Safely parse phase
+            try:
+                if cds.frame in ('.', None, ''):
+                    phase = 0
+                else:
+                    phase = int(cds.frame)
+            except (ValueError, TypeError, AttributeError):
+                phase = 0
+                logger.warning(f"Invalid phase for CDS {cds.id}, using default 0")
+            
             cds_features.append(
                 CDS(
                     seqid=cds.seqid,
                     start=cds.start,
                     end=cds.end,
                     strand=cds.strand,
-                    phase=int(cds.frame) if cds.frame is not None else 0,
+                    phase=phase,
                     attributes=dict(cds.attributes),
                 )
             )
         return cds_features
 
-    def parse_transcript(self, transcript_feature) -> Transcript:
+    def parse_transcript(self, transcript_feature: gffutils.Feature) -> Transcript:
         """
-        Parses the GFF file and returns a single Transcript objects, format of which was defined in models.py.
+        Parses the GFF file and returns a single Transcript object, format of which was defined in models.py.
+        
+        Args:
+            transcript_feature: gffutils Feature object for a transcript
+            
         Returns:
             Transcript: A single transcript object
-        Raises:
-            (To be implemented)
         """
-
         transcript = Transcript(
             transcript_id=transcript_feature.id,
             gene_id=self._get_id(transcript_feature),
@@ -178,10 +201,9 @@ class ParserGFF:
     def parse_transcripts(self) -> list[Transcript]:
         """
         Creates a list of Transcript objects by parsing the GFF file.
+        
         Returns:
             list[Transcript]: A list of Transcript objects.
-        Raises:
-            (To be implemented)
         """
         transcripts = []
 
@@ -193,16 +215,20 @@ class ParserGFF:
 
         return transcripts
 
-    def parse_genes(self) -> list[Gene]:
+    def parse_genes(self) -> Iterator[Gene]:
         """
-        Creates a list of Gene objects by parsing the GFF file.
-        Returns:
-            list[Gene]: A list of Gene objects.
-        Raises:
-            (To be implemented)
+        Creates an iterator of Gene objects by parsing the GFF file.
+        
+        Yields genes one at a time for memory efficiency.
+        
+        Yields:
+            Gene: Gene objects with their associated transcripts
+            
+        Example:
+            >>> parser = ParserGFF("annotations.gff3")
+            >>> for gene in parser.parse_genes():
+            ...     print(f"Gene {gene.gene_id}: {gene.n_transcripts} transcripts")
         """
-        genes = []
-
         for gene_feature in self.db.features_of_type("gene"):
             transcripts = []
 
@@ -221,9 +247,9 @@ class ParserGFF:
                 transcripts=transcripts,
                 attributes=dict(gene_feature.attributes),
             )
-            genes.append(gene)
+            
+            yield gene  # FIX: Changed from "yield genes" to "yield gene"
 
-        yield genes
 
-
-print("ParserGFF module loaded successfully.")
+# Remove the print statement for production
+# print("ParserGFF module loaded successfully.")

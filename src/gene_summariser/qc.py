@@ -4,6 +4,7 @@ from collections.abc import Callable
 
 from gene_summariser.fasta import get_full_sequence
 from gene_summariser.models import Transcript
+from Bio import SeqIO
 
 
 class QCChecker:
@@ -26,12 +27,18 @@ class QCChecker:
         max_exon_length: int = 1000000,
     ) -> None:
         self.fasta_file = fasta_file
+        self.genome = None
+
+        if fasta_file:
+            self.genome = SeqIO.to_dict(SeqIO.parse(fasta_file, "fasta"))
         """Initialize QC checker with configurable thresholds.
 
         Args:
             max_exon_count: Maximum reasonable number of exons (default: 50)
             min_cds_length: Minimum CDS length in base pairs (default: 30)
             max_exon_length: Maximum reasonable exon length (default: 1,000,000)
+            self.fasta_file: Path to the FASTA file for sequence-based checks
+            self.genome: Dictionary of sequences from the FASTA file
 
         Example:
             >>> # Strict checking
@@ -312,23 +319,43 @@ class QCChecker:
         return None
 
     def check_start_codon(self, transcript: Transcript) -> str | None:
-        if not self.fasta_file:
+        """
+        Check if the transcript's CDS starts with a valid start codon.
+
+        For all protein coding genes, the CDS should begin with a start codon (ATG, GTG, or TTG).
+        this flag will highlight transcripts that do not meet this criteria, 
+        indicating a potential annotation error or incomplete CDS.
+
+        Note:
+        - This check is only meaningful for protein-coding transcripts.
+        - Non-coding RNAs (e.g. mRNA fragments, lncRNA, tRNA, rRNA) are not expected
+        to contain start codons and should be excluded upstream.
+        """
+        if not self.genome or not transcript.has_cds:
             return None
         start_codons = {"ATG", "GTG", "TTG"}
-        if transcript.has_cds:
-            full_sequence = get_full_sequence(self.fasta_file, transcript)
-            start = full_sequence[:3].upper()
-            if start not in start_codons:
-                return "missing_start_codon"
+        full_sequence = get_full_sequence(self.genome, transcript)
+        if full_sequence[:3].upper() not in start_codons:
+            return "missing_start_codon"
         return None
 
     def check_stop_codon(self, transcript: Transcript) -> str | None:
-        if not self.fasta_file:
+        """
+        Check if the transcript's CDS ends with a valid stop codon.
+
+        For all protein coding genes, the CDS should end with a stop codon (TAA, TAG, or TGA).
+        This flag will highlight transcripts that do not meet this criteria,
+        indicating a potential annotation error or incomplete CDS.
+
+        Note:
+        - This check is only meaningful for protein-coding transcripts.
+        - Non-coding RNAs (e.g. mRNA fragments, lncRNA, tRNA, rRNA) are not expected
+        to contain stop codons and should be excluded upstream.
+        """
+        if not self.genome or not transcript.has_cds:
                 return None
         stop_codons = {"TAA", "TAG", "TGA"}
-        if transcript.has_cds:
-            full_sequence = get_full_sequence(self.fasta_file, transcript)
-            stop = full_sequence[-3:].upper()
-            if stop not in stop_codons:
-                return "missing_stop_codon"
+        full_sequence = get_full_sequence(self.genome, transcript)
+        if full_sequence[-3:].upper() not in stop_codons:
+            return "missing_stop_codon"
         return None

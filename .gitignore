@@ -205,3 +205,15 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Vscode
+.vscode
+
+#results of test runs
+results/
+
+# Real Fixture data
+test\fixtures\PlasmoDB-54_Pfalciparum3D7_Genome.fasta
+test\fixtures\PlasmoDB-54_Pfalciparum3D7.gff
+
+

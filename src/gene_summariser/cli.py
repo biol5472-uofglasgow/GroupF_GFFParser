@@ -38,8 +38,6 @@ def main() -> None:
    
     # Output format option
     parser.add_argument("--format",choices=["text", "csv", "json"],default="text",help="Output format for QC report")
-    
-    # Output directory 
     parser.add_argument(
     "--outdir",
     default="results",
