@@ -64,3 +64,45 @@ class PieChart:
             bbox_inches="tight",
         )
         plt.close()
+
+
+class FlaggedBarChart:
+    """
+    Generate a bar chart showing the number of flagged and unflagged transcripts.
+    """
+
+    def __init__(
+        self,
+        transcripts: list[TranscriptSummary],
+        title="Flagged vs Unflagged Transcripts",
+        output_file="flagged_vs_unflagged_bar.png",
+        output_dir: Path = Path("."),
+    ):
+        self.counts = self._count_flags(transcripts)
+        self.title = title
+        self.output_file = output_file
+        self.output_dir = output_dir
+
+    def _count_flags(self, transcripts) -> dict[str, int]:
+        counts = {"flagged": 0, "unflagged": 0}
+        for transcript in transcripts:
+            if transcript.flags:
+                counts["flagged"] += 1
+            else:
+                counts["unflagged"] += 1
+        return counts
+
+    def generate_bar_plot(self) -> None:
+        labels = ["Transcripts"]
+        flagged_counts = [self.counts["flagged"]]
+        unflagged_counts = [self.counts["unflagged"]]
+
+        x = range(len(labels))
+
+        plt.figure(figsize=(6, 6))
+        plt.bar(x, unflagged_counts, label="Unflagged", color="green")
+        plt.bar(
+            x, flagged_counts, bottom=unflagged_counts, label="Flagged", color="red"
+        )
+
+        plt.ylabel("Number of Transcripts")
