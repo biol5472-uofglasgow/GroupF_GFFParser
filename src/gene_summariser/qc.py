@@ -1,6 +1,7 @@
 """Quality control checks for transcript annotations."""
 
 from collections.abc import Callable
+from typing import Optional
 
 from gene_summariser.fasta import get_full_sequence
 from gene_summariser.models import Transcript
@@ -21,7 +22,7 @@ class QCChecker:
 
     def __init__(
         self,
-        fasta_file: str,
+        fasta_file: Optional[str]=None,
         max_exon_count: int = 50,
         min_cds_length: int = 30,
         max_exon_length: int = 1000000,
