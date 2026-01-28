@@ -1,29 +1,5 @@
 # Gene Model Summariser - Complete Docker Guide
 
-**A comprehensive guide to building, deploying, and using the Gene Model Summariser with Docker.**
-
----
-
-## Table of Contents
-
-1. [Overview](#overview)
-2. [Project Structure](#project-structure)
-3. [Docker Configuration Files](#docker-configuration-files)
-4. [Quick Start](#quick-start)
-5. [Building Images](#building-images)
-6. [Running Containers](#running-containers)
-7. [Docker Compose Usage](#docker-compose-usage)
-8. [Volume Mapping & Data Management](#volume-mapping--data-management)
-9. [Common Use Cases](#common-use-cases)
-10. [Troubleshooting](#troubleshooting)
-11. [Advanced Usage](#advanced-usage)
-12. [Best Practices](#best-practices)
-13. [CI/CD Integration](#cicd-integration)
-
----
-
-## Overview
-
 The Gene Model Summariser is a quality control tool for GFF3 gene annotations. This guide covers everything you need to know about running the tool in Docker containers, from basic usage to advanced deployment scenarios.
 
 **Key Features:**
@@ -50,11 +26,11 @@ gene-summariser/
 │       ├── metrics.py        # Metrics calculation
 │       ├── writer.py         # Output generation
 │       └── fasta.py          # FASTA sequence handling
-├── tests/
+├── test/
 │   ├── fixtures/             # Test data files
 │   │   ├── models.gff3
 │   │   ├── testfasta.fasta
-│   │   └── annotations.gff3
+│   │
 │   ├── test_models.py
 │   ├── test_parser.py
 │   ├── test_qc.py
@@ -144,7 +120,7 @@ services:
     container_name: gene-summariser-app
     volumes:
       # Mount test data from fixtures (or change to ./data for your own files)
-      - ./tests/fixtures:/data
+      - ./test/fixtures:/data
       - ./results:/app/results
     environment:
       - PYTHONUNBUFFERED=1
@@ -198,7 +174,7 @@ services:
 - Docker Compose installed (version 1.29+)
 - Input data files (GFF3, optionally FASTA)
 
-**Note:** The repository includes test data in `tests/fixtures/` that you can use immediately for testing. For your own analysis, you'll need to create a `data/` directory and add your files.
+**Note:** The repository includes test data in `test/fixtures/` that you can use immediately for testing. For your own analysis, you'll need to create a `data/` directory and add your files.
 
 ### 1. Build the Docker Image
 
@@ -216,7 +192,7 @@ You have two options:
 mkdir -p results
 # Use the test fixtures that are already in the repo
 docker run --rm \
-  -v $(pwd)/tests/fixtures:/data \
+  -v $(pwd)/test/fixtures:/data \
   -v $(pwd)/results:/app/results \
   gene-summariser:latest \
   --gff /data/models.gff3 \
@@ -238,7 +214,7 @@ cp /path/to/your/genome.fasta data/  # Optional
 
 ```bash
 docker run --rm \
-  -v $(pwd)/tests/fixtures:/data \
+  -v $(pwd)/test/fixtures:/data \
   -v $(pwd)/results:/app/results \
   gene-summariser:latest \
   --gff /data/models.gff3 \
@@ -419,7 +395,7 @@ docker-compose run --rm gene-summariser-dev bash
 Inside the container:
 
 ```bash
-pytest tests/ -v
+pytest test/ -v
 ruff check src/
 mypy src/
 gene-summariser --help
@@ -468,7 +444,7 @@ Docker volumes connect directories on your host machine to directories inside th
 ```
 gene-summariser/
 ├── src/
-├── tests/
+├── test/
 │   └── fixtures/
 │       ├── models.gff3        # Test GFF3 file
 │       ├── testfasta.fasta    # Test FASTA file
@@ -482,7 +458,7 @@ gene-summariser/
 
 ```
 your-project/
-├── tests/
+├── test/
 │   └── fixtures/
 │       ├── models.gff3        # Test data (from repo)
 │       └── testfasta.fasta    # Test data (from repo)
@@ -509,7 +485,7 @@ mkdir -p results
 
 # Run with test data
 docker run --rm \
-  -v $(pwd)/tests/fixtures:/data \
+  -v $(pwd)/test/fixtures:/data \
   -v $(pwd)/results:/app/results \
   gene-summariser:latest \
   --gff /data/models.gff3 \
@@ -896,7 +872,7 @@ docker run --rm \
 docker run --rm \
   -v $(pwd):/app \
   gene-summariser:dev \
-  pytest tests/ -v --cov=gene_summariser
+  pytest test/ -v --cov=gene_summariser
 ```
 
 ### Extracting Specific Files
@@ -1071,9 +1047,9 @@ jobs:
       - name: Run tests in container
         run: |
           docker run --rm \
-            -v $(pwd)/tests:/app/tests \
+            -v $(pwd)/test:/app/test \
             gene-summariser:latest \
-            pytest tests/ -v
+            pytest test/ -v
 
       - name: Login to Docker Hub
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -1110,7 +1086,7 @@ test:
   stage: test
   script:
     - docker run --rm $IMAGE_TAG --help
-    - docker run --rm $IMAGE_TAG pytest tests/ -v
+    - docker run --rm $IMAGE_TAG pytest test/ -v
 
 deploy:
   stage: deploy
@@ -1141,7 +1117,7 @@ pipeline {
             steps {
                 script {
                     docker.image("gene-summariser:${env.BUILD_ID}").inside {
-                        sh 'pytest tests/ -v'
+                        sh 'pytest test/ -v'
                     }
                 }
             }
@@ -1236,7 +1212,7 @@ COPY --from=builder /app /app
 echo "*.pyc" >> .dockerignore
 echo "__pycache__" >> .dockerignore
 echo ".git" >> .dockerignore
-echo "tests/" >> .dockerignore
+echo "test/" >> .dockerignore
 ```
 
 ### Build Cache Optimization
@@ -1334,21 +1310,6 @@ docker system prune -a --volumes
 - Docker Hub: https://hub.docker.com
 
 ---
-
-## Summary
-
-This guide has covered:
-
-- ✅ Project structure and Docker configuration files
-- ✅ Building images for different environments
-- ✅ Running containers with various options
-- ✅ Docker Compose for orchestration
-- ✅ Volume management and data handling
-- ✅ Common use cases and workflows
-- ✅ Troubleshooting and debugging
-- ✅ Advanced usage patterns
-- ✅ Best practices and security
-- ✅ CI/CD integration
 
 **Quick Reference:**
 

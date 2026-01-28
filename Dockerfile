@@ -16,20 +16,17 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy dependency files first (for layer caching)
-COPY pyproject.toml /app/
+COPY pyproject.toml ./
 
-# Install Python dependencies
+# Copy source code BEFORE installing
+COPY src/ ./src/
+
+# Install Python dependencies and the package
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -e .
 
-# Copy source code
-COPY src/ /app/src/
-
-# Install the package
-RUN pip install --no-cache-dir -e .
-
 # Create directories for data
-RUN mkdir -p /data/input /data/output
+RUN mkdir -p /data /app/results
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1

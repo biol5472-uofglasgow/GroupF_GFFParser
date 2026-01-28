@@ -1,4 +1,0 @@
-# chrom	start	end	name	score	strand
-chr1	4	80	tx1|cds_phase_inconsistent,missing_stop_codon	0	+
-chr1	4	80	tx2|no_cds	0	+
-chrFixture1	0	1783	PF3D7_1314600.1|cds_phase_inconsistent,missing_start_codon,missing_stop_codon,single_exon	0	+

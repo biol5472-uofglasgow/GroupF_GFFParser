@@ -3,7 +3,7 @@ import os
 import sys
 from pathlib import Path
 
-from gene_summariser.metrics import MetricsCalculator
+#importing required modules from the gene_summariser package
 from gene_summariser.parser import ParserGFF
 from gene_summariser.piechart import PieChart
 from gene_summariser.qc import QCChecker
@@ -11,19 +11,34 @@ from gene_summariser.writer import OutputWriter
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        prog="QC CHECK ON GFF",
-        description="This program takes a gff file and performs necessary QC checks on it to ensure that everything is correct.",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-    )
-    parser.add_argument(
-        "-g", "--gff", required=True, help="please write the path of the gffFile here."
-    )
-    parser.add_argument(
-        "-f",
-        "--fasta",
-        help="Optional ,please write the path of the genome fasta file here.",
-    )
+    """
+    Main entry point for the CLI
+    This function :
+    - parses command line arguments
+    - validates the user input
+    - Orchestrates parsing, QC checks, and output writing
+    - Handles errors and strict-mode behaviour if required
+    """
+
+    # Argument parsing
+    parser = argparse.ArgumentParser(prog='QC CHECK ON GFF',description='This program takes a gff file and performs necessary QC checks on it to ensure that everything is correct.',formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    
+    # Required input GFF file
+    parser.add_argument("-g","--gff", required=True, help='please write the path of the gffFile here.')
+   
+   # Optional genome FASTA file 
+    parser.add_argument("-f","--fasta",help='Optional ,please write the path of the genome fasta file here.')
+    
+    # Output options
+    parser.add_argument("-o", "--output",default="qc_report.txt",help="Output QC report file (default: qc_report.txt)")
+    
+    parser.add_argument("--log",default="qc.log",help="Log file for detailed execution info")
+    
+    #fail if any strict mode is detected 
+    parser.add_argument("--strict",action="store_true",help="Fail execution if any QC warning is detected")
+   
+    # Output format option
+    parser.add_argument("--format",choices=["text", "csv", "json"],default="text",help="Output format for QC report")
     parser.add_argument(
         "-o",
         "--output",
@@ -50,6 +65,9 @@ def main() -> None:
 
     args = parser.parse_args()
 
+
+
+    #checking file
     if not os.path.isfile(args.gff):
         print(f"GFF file not found: {args.gff}")
         SystemExit(1)
@@ -57,7 +75,8 @@ def main() -> None:
     if args.fasta and not os.path.isfile(args.fasta):
         print(f"FASTA file not found: {args.fasta}")
         SystemExit(1)
-
+    
+    # checking file type
     if not args.gff.endswith((".gff", ".gff3")):
         print("Input file is not a GFF/GFF3 file")
         SystemExit(1)
@@ -97,10 +116,9 @@ def main() -> None:
         if args.strict:
             n_flagged = sum(1 for s in summaries if s.flags)
             if n_flagged > 0:
-                print(
-                    f"ERROR: Strict mode enabled — {n_flagged} transcripts have QC issues",
-                    file=sys.stderr,
-                )
+                print(f"ERROR: Strict mode failed — {n_flagged} transcripts have QC issues.\n"
+                      "Inspect 'transcript_summary.tsv' or 'qc_flags.gff3' for details.\n"
+                       "Run without --strict to generate reports without failing." ,file=sys.stderr,)
                 sys.exit(2)
 
         print("QC checks completed")
