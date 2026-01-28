@@ -3,7 +3,7 @@ import os
 import sys
 from pathlib import Path
 
-from gene_summariser.figures import FlaggedBarChart, PieChart
+from gene_summariser.figures import ExonCountHistogram, FlaggedBarChart, PieChart
 from gene_summariser.metrics import MetricsCalculator
 
 # importing required modules from the gene_summariser package
@@ -117,6 +117,9 @@ def main() -> None:
 
         pie_chart = PieChart(summaries, output_dir=outdir)
         pie_chart.generate_pie_chart()
+
+        exon_histogram = ExonCountHistogram(summaries, output_dir=outdir)
+        exon_histogram.generate_histogram()
 
         flagged_bar_chart = FlaggedBarChart(summaries, output_dir=outdir)
         flagged_bar_chart.generate_bar_plot()
