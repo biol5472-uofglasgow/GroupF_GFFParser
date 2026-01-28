@@ -4,7 +4,6 @@ import matplotlib
 
 matplotlib.use("Agg")  # MUST come before pyplot
 
-
 import matplotlib.pyplot as plt
 
 from gene_summariser.models import TranscriptSummary
@@ -26,7 +25,7 @@ class PieChart:
         self.data = self._process_transcripts(transcripts)
         self.title = title
         self.output_file = output_file
-        self.output_dir = output_dir
+        self.output_dir = Path(output_dir) / "figures"
 
     def _process_transcripts(
         self, transcripts: list[TranscriptSummary]
@@ -58,7 +57,7 @@ class PieChart:
         )
         plt.title(self.title)
         plt.axis("equal")
-
+        self.output_dir.mkdir(parents=True, exist_ok=True)
         plt.savefig(
             self.output_dir / self.output_file,
             bbox_inches="tight",
@@ -81,7 +80,7 @@ class FlaggedBarChart:
         self.counts = self._count_flags(transcripts)
         self.title = title
         self.output_file = output_file
-        self.output_dir = output_dir
+        self.output_dir = Path(output_dir) / "figures"
 
     def _count_flags(self, transcripts) -> dict[str, int]:
         counts = {"flagged": 0, "unflagged": 0}
@@ -107,6 +106,7 @@ class FlaggedBarChart:
         plt.legend()
 
         plt.tight_layout()
+        self.output_dir.mkdir(parents=True, exist_ok=True)
         plt.savefig(self.output_dir / self.output_file)
         plt.close()
 
@@ -126,7 +126,7 @@ class ExonCountHistogram:
         self.exon_counts = [transcript.n_exons for transcript in transcripts]
         self.title = title
         self.output_file = output_file
-        self.output_dir = output_dir
+        self.output_dir = Path(output_dir) / "figures"
 
     def generate_histogram(self) -> None:
         plt.figure(figsize=(8, 6))
@@ -143,6 +143,7 @@ class ExonCountHistogram:
         plt.xticks(range(1, max(self.exon_counts) + 1))
         # Adding a grid and setting its transparency
         plt.grid(axis="y", alpha=0.75)
+        self.output_dir.mkdir(parents=True, exist_ok=True)
         plt.savefig(self.output_dir / self.output_file)
         plt.close()
 
@@ -167,7 +168,7 @@ class CDSLengthHistogram:
         ]
         self.title = title
         self.output_file = output_file
-        self.output_dir = output_dir
+        self.output_dir = Path(output_dir) / "figures"
 
     def generate_histogram(self) -> None:
         plt.figure(figsize=(8, 6))
@@ -181,5 +182,6 @@ class CDSLengthHistogram:
         plt.title(self.title)
         # Adding a grid and setting its transparency
         plt.grid(axis="y", alpha=0.75)
+        self.output_dir.mkdir(parents=True, exist_ok=True)
         plt.savefig(self.output_dir / self.output_file)
         plt.close()
