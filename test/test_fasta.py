@@ -1,8 +1,8 @@
 import pytest
-
 from Bio import SeqIO
-from gene_summariser.parser import ParserGFF
+
 from gene_summariser.fasta import get_full_sequence
+from gene_summariser.parser import ParserGFF
 
 
 @pytest.fixture

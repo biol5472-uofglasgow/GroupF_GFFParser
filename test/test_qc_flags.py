@@ -27,22 +27,24 @@ def parser(gff_file: Literal["test/fixtures/models.gff3"]):
 def test_divisable_by_three(parser: ParserGFF):
     """
     Unit test for the following condition:
-    - A transcript with CDS features that are all divisible by 3 does not have the "cds_not_divisible_by_3" flag.
+    - A transcript with CDS features that are all divisible by 3 does not have the
+    "cds_not_divisible_by_3" flag.
     - A transcript with no CDS features does not have the "cds_not_divisible_by_3" flag.
     """
     transcripts = parser.parse_transcripts()
-    QC_checker = QCChecker("test/fixtures/testfasta.fasta")
+    qc_checker = QCChecker("test/fixtures/testfasta.fasta")
 
-    assert "cds_not_divisible_by_3" not in QC_checker.check_transcript(transcripts[0])
-    assert "cds_not_divisible_by_3" not in QC_checker.check_transcript(transcripts[1])
+    assert "cds_not_divisible_by_3" not in qc_checker.check_transcript(transcripts[0])
+    assert "cds_not_divisible_by_3" not in qc_checker.check_transcript(transcripts[1])
 
 
 def test_divisable_not_divisable_by_three():
     """
     Unit test for the following condition:
-    - A transcript with CDS features that are not all divisible by 3 has the "cds_not_divisible_by_3" flag.
+    - A transcript with CDS features that are not all divisible by 3 has the
+    "cds_not_divisible_by_3" flag.
     """
-    QC_checker = QCChecker("test/fixtures/testfasta.fasta")
+    qc_checker = QCChecker("test/fixtures/testfasta.fasta")
 
     cds_features_fail = [
         CDS(seqid="chr1", start=1, end=10, strand="+"),
@@ -60,7 +62,7 @@ def test_divisable_not_divisable_by_three():
         attributes={},
     )
 
-    assert "cds_not_divisible_by_3" in QC_checker.check_transcript(transcript)
+    assert "cds_not_divisible_by_3" in qc_checker.check_transcript(transcript)
 
 
 def test_no_start_codon_flag(parser: ParserGFF):
@@ -70,8 +72,8 @@ def test_no_start_codon_flag(parser: ParserGFF):
     """
     transcripts = parser.parse_transcripts()
     transcript = transcripts[0]  # Transcript with no CDS features
-    QC_checker = QCChecker("test/fixtures/testfasta.fasta")
-    flags = QC_checker.check_transcript(transcript)
+    qc_checker = QCChecker("test/fixtures/testfasta.fasta")
+    flags = qc_checker.check_transcript(transcript)
     assert "no_start_codon" not in flags
 
 
@@ -82,8 +84,8 @@ def test_stop_codon_flags(parser: ParserGFF):
     """
     transcripts = parser.parse_transcripts()
     transcript = transcripts[0]  # Transcript with no CDS features
-    QC_checker = QCChecker("test/fixtures/testfasta.fasta")
-    flags = QC_checker.check_transcript(transcript)
+    qc_checker = QCChecker("test/fixtures/testfasta.fasta")
+    flags = qc_checker.check_transcript(transcript)
     assert "missing_stop_codon" in flags
 
 
@@ -91,12 +93,13 @@ def test_real_data_start_stop_codon(parser: ParserGFF):
     """
     Unit test for the following condition:
     - A real transcript with start codons present does not have the "no_start_codon" flag.
-    - A real transcript with a stop codon present does not have the "missing_stop_codon" flag.
+    - A real transcript with a stop codon present does not have the "missing_stop_codon"
+    flag.
     """
     transcripts = parser.parse_transcripts()
     transcript = transcripts[2]  # Real transcript with CDS features
-    QC_checker = QCChecker("test/fixtures/testfasta.fasta")
-    flags = QC_checker.check_transcript(transcript)
+    qc_checker = QCChecker("test/fixtures/testfasta.fasta")
+    flags = qc_checker.check_transcript(transcript)
     assert "no_start_codon" not in flags
     assert "missing_stop_codon" in flags
 
