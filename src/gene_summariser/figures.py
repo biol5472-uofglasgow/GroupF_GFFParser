@@ -57,6 +57,7 @@ class PieChart:
         )
         plt.title(self.title)
         plt.axis("equal")
+        # Creating output directory if it doesn't exist
         self.output_dir.mkdir(parents=True, exist_ok=True)
         plt.savefig(
             self.output_dir / self.output_file,
@@ -106,6 +107,7 @@ class FlaggedBarChart:
         plt.legend()
 
         plt.tight_layout()
+        # Creating output directory if it doesn't exist
         self.output_dir.mkdir(parents=True, exist_ok=True)
         plt.savefig(self.output_dir / self.output_file)
         plt.close()
@@ -143,6 +145,7 @@ class ExonCountHistogram:
         plt.xticks(range(1, max(self.exon_counts) + 1))
         # Adding a grid and setting its transparency
         plt.grid(axis="y", alpha=0.75)
+        # Creating output directory if it doesn't exist
         self.output_dir.mkdir(parents=True, exist_ok=True)
         plt.savefig(self.output_dir / self.output_file)
         plt.close()
@@ -182,6 +185,7 @@ class CDSLengthHistogram:
         plt.title(self.title)
         # Adding a grid and setting its transparency
         plt.grid(axis="y", alpha=0.75)
+        # Creating output directory if it doesn't exist
         self.output_dir.mkdir(parents=True, exist_ok=True)
         plt.savefig(self.output_dir / self.output_file)
         plt.close()
