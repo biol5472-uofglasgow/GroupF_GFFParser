@@ -31,7 +31,7 @@ class QCChecker:
         self.genome = None
 
         if fasta_file:
-            self.genome = SeqIO.to_dict(SeqIO.parse(fasta_file, "fasta"))
+            self.genome = SeqIO.to_dict(SeqIO.parse(fasta_file, "fasta")) # type: ignore[no-untyped-call]
         """Initialize QC checker with configurable thresholds.
 
         Args:
