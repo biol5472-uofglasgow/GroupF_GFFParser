@@ -93,16 +93,19 @@ class FlaggedBarChart:
         return counts
 
     def generate_bar_plot(self) -> None:
-        labels = ["Transcripts"]
-        flagged_counts = [self.counts["flagged"]]
-        unflagged_counts = [self.counts["unflagged"]]
+        group = ["flagged", "unflagged"]
+        counts = [self.counts["flagged"], self.counts["unflagged"]]
+        labels = ["Flagged", "Unflagged"]
+        bar_colours = ["#409ab6", "#ce6868"]
 
-        x = range(len(labels))
+        plt.figure(figsize=(4, 6))
+        plt.bar(group, counts, label=labels, color=bar_colours)
 
-        plt.figure(figsize=(6, 6))
-        plt.bar(x, unflagged_counts, label="Unflagged", color="green")
-        plt.bar(
-            x, flagged_counts, bottom=unflagged_counts, label="Flagged", color="red"
-        )
+        plt.xlabel("Transcript Status")
+        plt.ylabel("Number of transcripts")
+        plt.title(self.title)
+        plt.legend()
 
-        plt.ylabel("Number of Transcripts")
+        plt.tight_layout()
+        plt.savefig(self.output_dir / self.output_file)
+        plt.close()
