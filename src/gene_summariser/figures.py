@@ -18,10 +18,10 @@ class PieChart:
     def __init__(
         self,
         transcripts: list[TranscriptSummary],
-        title="Flag Distribution",
-        output_file="pie_chart.png",
+        title: str="Flag Distribution",
+        output_file: str="pie_chart.png",
         output_dir: Path = Path("."),
-    ):
+    )-> None:
         self.data = self._process_transcripts(transcripts)
         self.title = title
         self.output_file = output_file
@@ -74,19 +74,20 @@ class FlaggedBarChart:
     def __init__(
         self,
         transcripts: list[TranscriptSummary],
-        title="Flagged vs Unflagged Transcripts",
-        output_file="flagged_vs_unflagged_bar.png",
+        title:str="Flagged vs Unflagged Transcripts",
+        output_file:str="flagged_vs_unflagged_bar.png",
         output_dir: Path = Path("."),
-    ):
+    )->None:
         self.counts = self._count_flags(transcripts)
         self.title = title
         self.output_file = output_file
         self.output_dir = Path(output_dir) / "figures"
 
-    def _count_flags(self, transcripts) -> dict[str, int]:
+    def _count_flags(
+            self, transcripts: list[TranscriptSummary]) -> dict[str, int]:
         counts = {"flagged": 0, "unflagged": 0}
         for transcript in transcripts:
-            if transcript.flags:
+            if transcript.flags:    
                 counts["flagged"] += 1
             else:
                 counts["unflagged"] += 1
@@ -121,8 +122,8 @@ class ExonCountHistogram:
     def __init__(
         self,
         transcripts: list[TranscriptSummary],
-        title="Exon Count Distribution",
-        output_file="exon_count_distribution.png",
+        title:str="Exon Count Distribution",
+        output_file:str="exon_count_distribution.png",
         output_dir: Path = Path("."),
     ):
         self.exon_counts = [transcript.n_exons for transcript in transcripts]
@@ -159,8 +160,8 @@ class CDSLengthHistogram:
     def __init__(
         self,
         transcripts: list[TranscriptSummary],
-        title="CDS Length Distribution",
-        output_file="cds_length_distribution.png",
+        title:str="CDS Length Distribution",
+        output_file:str="cds_length_distribution.png",
         output_dir: Path = Path("."),
     ):
         self.cds_lengths = [
