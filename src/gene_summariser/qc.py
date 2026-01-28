@@ -1,7 +1,6 @@
 """Quality control checks for transcript annotations."""
 
 from collections.abc import Callable
-from typing import Optional
 
 from Bio import SeqIO
 
@@ -23,7 +22,7 @@ class QCChecker:
 
     def __init__(
         self,
-        fasta_file: Optional[str]=None,
+        fasta_file: str | None =None,
         max_exon_count: int = 50,
         min_cds_length: int = 30,
         max_exon_length: int = 1000000,
