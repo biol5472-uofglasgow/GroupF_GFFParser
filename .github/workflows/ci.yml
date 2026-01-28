@@ -35,11 +35,11 @@ jobs:
 
       - name: Run ruff linter
         run: |
-          ruff check src/ tests/ --output-format=github
+          ruff check src/ test/ --output-format=github
 
       - name: Check code formatting
         run: |
-          ruff format --check src/ tests/
+          ruff format --check src/ test/
 
   type-check:
     name: Type Check

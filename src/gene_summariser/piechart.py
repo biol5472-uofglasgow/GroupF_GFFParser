@@ -4,6 +4,7 @@ import matplotlib
 
 matplotlib.use("Agg")  # MUST come before pyplot
 
+
 import matplotlib.pyplot as plt
 
 from gene_summariser.models import TranscriptSummary

@@ -1,6 +1,3 @@
-from collections.abc import Iterator
-
-from Bio import SeqIO
 from Bio.Seq import Seq
 
 from gene_summariser.models import Transcript
