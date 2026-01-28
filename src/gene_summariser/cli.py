@@ -3,11 +3,11 @@ import os
 import sys
 from pathlib import Path
 
+from gene_summariser.figures import PieChart
 from gene_summariser.metrics import MetricsCalculator
 
 # importing required modules from the gene_summariser package
 from gene_summariser.parser import ParserGFF
-from gene_summariser.piechart import PieChart
 from gene_summariser.qc import QCChecker
 from gene_summariser.writer import OutputWriter
 
@@ -62,26 +62,6 @@ def main() -> None:
     )
 
     # Output format option
-    parser.add_argument(
-        "--format",
-        choices=["text", "csv", "json"],
-        default="text",
-        help="Output format for QC report",
-    )
-    parser.add_argument(
-        "-o",
-        "--output",
-        default="qc_report.txt",
-        help="Output QC report file (default: qc_report.txt)",
-    )
-    parser.add_argument(
-        "--log", default="qc.log", help="Log file for detailed execution info"
-    )
-    parser.add_argument(
-        "--strict",
-        action="store_true",
-        help="Fail execution if any QC warning is detected",
-    )
     parser.add_argument(
         "--format",
         choices=["text", "csv", "json"],
