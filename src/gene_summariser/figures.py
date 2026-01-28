@@ -98,7 +98,7 @@ class FlaggedBarChart:
         labels = ["Flagged", "Unflagged"]
         bar_colours = ["#409ab6", "#ce6868"]
 
-        plt.figure(figsize=(4, 6))
+        plt.figure(figsize=(8, 8))
         plt.bar(group, counts, label=labels, color=bar_colours)
 
         plt.xlabel("Transcript Status")
@@ -131,7 +131,7 @@ class ExonCountHistogram:
         self.output_dir = Path(output_dir) / "figures"
 
     def generate_histogram(self) -> None:
-        plt.figure(figsize=(8, 6))
+        plt.figure(figsize=(8, 8))
         plt.hist(
             self.exon_counts,
             bins=range(1, max(self.exon_counts) + 2),
@@ -174,7 +174,7 @@ class CDSLengthHistogram:
         self.output_dir = Path(output_dir) / "figures"
 
     def generate_histogram(self) -> None:
-        plt.figure(figsize=(8, 6))
+        plt.figure(figsize=(8, 8))
         plt.hist(
             self.cds_lengths,
             edgecolor="black",
