@@ -1,14 +1,16 @@
 """Generate HTML report from gene-summariser results."""
 
-import argparse
+
 import json
 from pathlib import Path
 import pandas as pd
 
 
-def generate_html_report(results_dir: Path, output_file: Path) -> None:
+def generate_html_report(results_dir: Path) -> None:
     """Generate HTML report with visualizations."""
     
+    output_file = results_dir / "qc_report.html"
+
     # Load data
     summary_df = pd.read_csv(results_dir / "transcript_summary.tsv", sep="\t")
     
@@ -115,18 +117,6 @@ def generate_html_report(results_dir: Path, output_file: Path) -> None:
 """
     
     output_file.write_text(html)
-    print(f"Report generated: {output_file}")
+    return output_file
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Generate HTML QC report")
-    parser.add_argument("results_dir", type=Path, help="Results directory")
-    parser.add_argument("-o", "--output", type=Path, default=Path("qc_report.html"))
-    args = parser.parse_args()
-    
-    generate_html_report(args.results_dir, args.output)
-    print(f"\nOpen in browser: file://{args.output.absolute()}")
-
-
-if __name__ == "__main__":
-    main()
