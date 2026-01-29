@@ -153,7 +153,7 @@ def main() -> None:
         SystemExit(1)
 
     try:
-        report_path = generate_html_report(args.outdir)
+        report_path = generate_html_report(Path(args.outdir))
         print(f"HTML report generated: {report_path}")
     except Exception as e:
         print(f"Warning: failed to generate HTML report: {e}")
