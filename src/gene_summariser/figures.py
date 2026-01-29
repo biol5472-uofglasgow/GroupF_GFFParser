@@ -12,7 +12,7 @@ from gene_summariser.models import TranscriptSummary
 class PieChart:
     """
     Generate a pie chart showing the distribution of flags in transcript summaries.
-    These flags are stored within TranscriptSummary.flags as a list of strings.
+    This will allow visualisation of the most common flags / issues across transcripts.
     """
 
     def __init__(
@@ -21,10 +21,12 @@ class PieChart:
         title: str="Flag Distribution",
         output_file: str="pie_chart.png",
         output_dir: Path = Path("."),
-    )-> None:
+    ):
+        # Prossess the flag counts in a Dict using the helper method
         self.data = self._process_transcripts(transcripts)
         self.title = title
         self.output_file = output_file
+        # Set output directory for figures
         self.output_dir = Path(output_dir) / "figures"
 
     def _process_transcripts(
@@ -48,17 +50,21 @@ class PieChart:
         labels = list(self.data.keys())
         values = list(self.data.values())
 
+        # Setting a consistent size for all charts
         plt.figure(figsize=(8, 8))
         plt.pie(values, startangle=90)
+        # Ensures the legend is not overlapping with the piechart
         plt.legend(
             labels,
-            loc="center left",
+
             bbox_to_anchor=(1, 0.5),
         )
         plt.title(self.title)
+        # Equal aspect ratio ensures that pie is drawn as a circle.
         plt.axis("equal")
         # Creating output directory if it doesn't exist
         self.output_dir.mkdir(parents=True, exist_ok=True)
+        # Saving the figure, setting bbox_inches to tight to ensure nothing is cut off
         plt.savefig(
             self.output_dir / self.output_file,
             bbox_inches="tight",
@@ -69,6 +75,8 @@ class PieChart:
 class FlaggedBarChart:
     """
     Generate a bar chart showing the number of flagged and unflagged transcripts.
+    Gives a more general overview of the QC status of the transcripts.
+    Allowing identification of "good" vs "problematic" transcripts.
     """
 
     def __init__(
@@ -77,7 +85,8 @@ class FlaggedBarChart:
         title:str="Flagged vs Unflagged Transcripts",
         output_file:str="flagged_vs_unflagged_bar.png",
         output_dir: Path = Path("."),
-    )->None:
+    ):
+        # Count flagged vs unflagged transcripts using helper method
         self.counts = self._count_flags(transcripts)
         self.title = title
         self.output_file = output_file
@@ -93,12 +102,14 @@ class FlaggedBarChart:
                 counts["unflagged"] += 1
         return counts
 
+    # Setting up the lists used for plotting the bar plot
     def generate_bar_plot(self) -> None:
         group = ["flagged", "unflagged"]
         counts = [self.counts["flagged"], self.counts["unflagged"]]
         labels = ["Flagged", "Unflagged"]
         bar_colours = ["#409ab6", "#ce6868"]
 
+        # Setting a consistent size for all charts
         plt.figure(figsize=(8, 8))
         plt.bar(group, counts, label=labels, color=bar_colours)
 
@@ -117,6 +128,7 @@ class FlaggedBarChart:
 class ExonCountHistogram:
     """
     Generate a histogram showing the distribution of exon counts across transcripts.
+    Allows for visualisation of how exons are distibuted within the dataset
     """
 
     def __init__(
@@ -126,19 +138,23 @@ class ExonCountHistogram:
         output_file:str="exon_count_distribution.png",
         output_dir: Path = Path("."),
     ):
+        # Extract exon counts from transcripts
         self.exon_counts = [transcript.n_exons for transcript in transcripts]
         self.title = title
         self.output_file = output_file
         self.output_dir = Path(output_dir) / "figures"
 
     def generate_histogram(self) -> None:
+        # Setting a consistent size for all charts
         plt.figure(figsize=(8, 8))
+        # Bins set to give one bin per exon count value, eg 1,2,3,4...
         plt.hist(
             self.exon_counts,
             bins=range(1, max(self.exon_counts) + 2),
             edgecolor="black",
             alpha=0.7,
         )
+
         plt.xlabel("Number of Exons")
         plt.ylabel("Number of Transcripts")
         plt.title(self.title)
@@ -164,6 +180,7 @@ class CDSLengthHistogram:
         output_file:str="cds_length_distribution.png",
         output_dir: Path = Path("."),
     ):
+        # Extract CDS lengths from transcripts, ensures the len is not None or 0
         self.cds_lengths = [
             transcript.total_cds_length
             for transcript in transcripts
@@ -175,6 +192,7 @@ class CDSLengthHistogram:
         self.output_dir = Path(output_dir) / "figures"
 
     def generate_histogram(self) -> None:
+        # Setting a consistent size for all charts
         plt.figure(figsize=(8, 8))
         plt.hist(
             self.cds_lengths,
