@@ -90,7 +90,7 @@ def main() -> None:
     # checking file type
     if not args.gff.endswith((".gff", ".gff3")):
         print("Input file is not a GFF/GFF3 file")
-        SystemExit(1)
+        sys.exit(1)
 
     try:
         print("Parsing GFF file...")

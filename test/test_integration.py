@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pytest
 
+from gene_summariser.generate_report import generate_html_report
 from gene_summariser.metrics import MetricsCalculator
 from gene_summariser.parser import ParserGFF
 from gene_summariser.qc import QCChecker
@@ -25,11 +26,12 @@ def project_pipeline(gff_file: str, fasta_file: str, outdir: Path) -> None:
     writer.write_qc_flags_gff3(transcripts, summaries)
     writer.write_qc_flags_bed(transcripts, summaries)
 
+    generate_html_report(outdir)
 
-def test_integration(tmp_path: Path = Path("test/tmp")):
+
+def test_integration(tmp_path: Path) -> None:
     gff_file = "test/fixtures/models.gff3"
     fasta_file = "test/fixtures/testfasta.fasta"
-    tmp_path.mkdir(parents=True, exist_ok=True)
     outdir = tmp_path / "output"
     outdir.mkdir()
 
@@ -41,7 +43,17 @@ def test_integration(tmp_path: Path = Path("test/tmp")):
         lines = f.readlines()
         assert len(lines) == 4
 
+    assert (outdir / "run.json").exists()
+    # Check the number of transcripts in the HTML report
+    html_path = outdir / "qc_report.html"
+    assert html_path.exists()
+    html = html_path.read_text()
+
+    assert 'class="stats"' in html
+    assert 'class="stat-box"' in html
+    assert "Total Transcripts" in html
+    assert ">3<" in html
+
 
 if __name__ == "__main__":
-    test_integration()
     pytest.main()
