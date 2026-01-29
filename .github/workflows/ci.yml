@@ -129,7 +129,7 @@ jobs:
 
       - name: Run integration tests
         run: |
-          pytest tests/test_integration.py -v --tb=short
+          pytest test/test_integration.py -v --tb=short
 
   # ============================================================================
   # DOCKER BUILD
