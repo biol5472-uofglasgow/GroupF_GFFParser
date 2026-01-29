@@ -18,8 +18,8 @@ class PieChart:
     def __init__(
         self,
         transcripts: list[TranscriptSummary],
-        title="Flag Distribution",
-        output_file="pie_chart.png",
+        title: str="Flag Distribution",
+        output_file: str="pie_chart.png",
         output_dir: Path = Path("."),
     ):
         # Prossess the flag counts in a Dict using the helper method
@@ -82,8 +82,8 @@ class FlaggedBarChart:
     def __init__(
         self,
         transcripts: list[TranscriptSummary],
-        title="Flagged vs Unflagged Transcripts",
-        output_file="flagged_vs_unflagged_bar.png",
+        title:str="Flagged vs Unflagged Transcripts",
+        output_file:str="flagged_vs_unflagged_bar.png",
         output_dir: Path = Path("."),
     ):
         # Count flagged vs unflagged transcripts using helper method
@@ -92,7 +92,8 @@ class FlaggedBarChart:
         self.output_file = output_file
         self.output_dir = Path(output_dir) / "figures"
 
-    def _count_flags(self, transcripts) -> dict[str, int]:
+    def _count_flags(
+            self, transcripts: list[TranscriptSummary]) -> dict[str, int]:
         counts = {"flagged": 0, "unflagged": 0}
         for transcript in transcripts:
             if transcript.flags:
@@ -133,8 +134,8 @@ class ExonCountHistogram:
     def __init__(
         self,
         transcripts: list[TranscriptSummary],
-        title="Exon Count Distribution",
-        output_file="exon_count_distribution.png",
+        title:str="Exon Count Distribution",
+        output_file:str="exon_count_distribution.png",
         output_dir: Path = Path("."),
     ):
         # Extract exon counts from transcripts
@@ -175,8 +176,8 @@ class CDSLengthHistogram:
     def __init__(
         self,
         transcripts: list[TranscriptSummary],
-        title="CDS Length Distribution",
-        output_file="cds_length_distribution.png",
+        title:str="CDS Length Distribution",
+        output_file:str="cds_length_distribution.png",
         output_dir: Path = Path("."),
     ):
         # Extract CDS lengths from transcripts, ensures the len is not None or 0
