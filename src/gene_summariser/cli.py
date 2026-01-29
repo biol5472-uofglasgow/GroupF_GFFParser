@@ -9,13 +9,11 @@ from gene_summariser.figures import (
     FlaggedBarChart,
     PieChart,
 )
+from gene_summariser.generate_report import generate_html_report
 from gene_summariser.metrics import MetricsCalculator
-
-# importing required modules from the gene_summariser package
 from gene_summariser.parser import ParserGFF
 from gene_summariser.qc import QCChecker
 from gene_summariser.writer import OutputWriter
-from gene_summariser.generate_report import generate_html_report
 
 
 def main() -> None:
