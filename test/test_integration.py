@@ -46,6 +46,7 @@ def test_integration(tmp_path: Path) -> None:
     assert (outdir / "run.json").exists()
     # Check the number of transcripts in the HTML report
     html_path = outdir / "qc_report.html"
+    assert html_path.exists()
     html = html_path.read_text()
 
     assert 'class="stats"' in html
