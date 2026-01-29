@@ -6,7 +6,7 @@ from pathlib import Path
 import pandas as pd
 
 
-def generate_html_report(results_dir: Path) -> None:
+def generate_html_report(results_dir: Path) -> Path:
     """Generate HTML report with visualizations."""
     results_dir = Path(results_dir)
     output_file = results_dir / "qc_report.html"
@@ -24,7 +24,7 @@ def generate_html_report(results_dir: Path) -> None:
     with_cds = summary_df["has_cds"].sum()
     
     # Count flags
-    flag_counts = {}
+    flag_counts:dict[str,int] = {}
     for flags in summary_df["flags"]:
         if flags:
             for flag in flags.split(","):
