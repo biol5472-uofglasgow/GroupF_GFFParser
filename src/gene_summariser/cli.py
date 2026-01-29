@@ -15,6 +15,7 @@ from gene_summariser.metrics import MetricsCalculator
 from gene_summariser.parser import ParserGFF
 from gene_summariser.qc import QCChecker
 from gene_summariser.writer import OutputWriter
+from gene_summariser.generate_report import generate_html_report
 
 
 def main() -> None:
@@ -132,7 +133,7 @@ def main() -> None:
         cds_length_histogram = CDSLengthHistogram(summaries, output_dir=outdir)
         cds_length_histogram.generate_histogram()
 
-        print(f"  Transcript summary written to: {summary_path}")
+        print(f" Transcript summary written to: {summary_path}")
 
         if args.strict:
             n_flagged = sum(1 for s in summaries if s.flags)
@@ -150,6 +151,12 @@ def main() -> None:
     except Exception as e:
         print(f"Error:{e}")
         SystemExit(1)
+
+    try:
+        report_path = generate_html_report(args.outdir)
+        print(f"HTML report generated: {report_path}")
+    except Exception as e:
+        print(f"Warning: failed to generate HTML report: {e}")
 
 
 if __name__ == "__main__":
