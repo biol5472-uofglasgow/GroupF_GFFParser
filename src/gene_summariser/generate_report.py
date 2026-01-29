@@ -8,11 +8,12 @@ import pandas as pd
 
 def generate_html_report(results_dir: Path) -> None:
     """Generate HTML report with visualizations."""
-    
+    results_dir = Path(results_dir)
     output_file = results_dir / "qc_report.html"
 
     # Load data
     summary_df = pd.read_csv(results_dir / "transcript_summary.tsv", sep="\t")
+    summary_df["flags"] = summary_df["flags"].fillna("")
     
     with open(results_dir / "run.json") as f:
         provenance = json.load(f)
