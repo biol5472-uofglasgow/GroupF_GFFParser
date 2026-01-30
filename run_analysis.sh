@@ -29,7 +29,7 @@ fi
 mkdir -p "$OUT_DIR"
 
 # Get directory from GFF for Docker mount
-INPUT_DIR="$(dirname "$GFF_FILE")"
+INPUT_DIR="$(cd "$(dirname "$GFF_FILE")" && pwd)"
 
 # Print info
 echo "GFF file: $GFF_FILE"
