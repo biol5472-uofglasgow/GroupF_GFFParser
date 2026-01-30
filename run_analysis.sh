@@ -1,47 +1,55 @@
 #!/bin/bash
-# Simple wrapper script for gene-summariser
+# ================================
+# run_analysis.sh
+# Usage: ./run_analysis.sh <GFF_FILE> [FASTA_FILE] [OUT_DIR] [--strict]
+# ================================
 
-set -e  # Exit on error
-
-# Default values
-GFF_FILE=""
+GFF_FILE="$1"
 FASTA_FILE=""
-OUTPUT_DIR="results"
+OUT_DIR=""
+STRICT_FLAG=""
 
-# Parse arguments
-while [[ $# -gt 0 ]]; do
-  case $1 in
-    --gff)
-      GFF_FILE="$2"
-      shift 2
-      ;;
-    --fasta)
-      FASTA_FILE="$2"
-      shift 2
-      ;;
-    --outdir)
-      OUTPUT_DIR="$2"
-      shift 2
-      ;;
-    *)
-      echo "Unknown option: $1"
-      exit 1
-      ;;
-  esac
-done
-
-# Validate
-if [ -z "$GFF_FILE" ]; then
-  echo "Error: --gff required"
-  exit 1
+# Determine strict flag (if last argument is --strict)
+if [ "${@: -1}" == "--strict" ]; then
+    STRICT_FLAG="--strict"
 fi
 
-# Run
-echo "Running gene-summariser..."
-if [ -n "$FASTA_FILE" ]; then
-  gene-summariser --gff "$GFF_FILE" --fasta "$FASTA_FILE" --outdir "$OUTPUT_DIR"
+# Determine FASTA and OUT_DIR based on arguments
+if [ -z "$3" ]; then
+    # Only 2 arguments → GFF and OUT_DIR
+    OUT_DIR="$2"
 else
-  gene-summariser --gff "$GFF_FILE" --outdir "$OUTPUT_DIR"
+    # 3 arguments → FASTA provided
+    FASTA_FILE="$2"
+    OUT_DIR="$3"
 fi
 
-echo "Done! Results in $OUTPUT_DIR"
+
+# Create output folder if missing
+mkdir -p "$OUT_DIR"
+
+# Get directory from GFF for Docker mount
+INPUT_DIR="$(dirname "$GFF_FILE")"
+
+# Print info
+echo "GFF file: $GFF_FILE"
+echo "FASTA file: $FASTA_FILE"
+echo "Output directory: $OUT_DIR"
+echo "Mounted input directory: $INPUT_DIR"
+echo "Passing strict flag: $STRICT_FLAG"
+
+# Build Docker command
+DOCKER_CMD=(docker run --rm -v "$INPUT_DIR:/work" -w /work gene-summariser -g "$(basename "$GFF_FILE")" --outdir "$OUT_DIR")
+
+# Add FASTA if provided
+if [ -n "$FASTA_FILE" ]; then
+    DOCKER_CMD+=(-f "$(basename "$FASTA_FILE")")
+fi
+
+# Add strict flag if provided
+if [ -n "$STRICT_FLAG" ]; then
+    DOCKER_CMD+=("$STRICT_FLAG")
+fi
+
+# Run Docker
+"${DOCKER_CMD[@]}"
