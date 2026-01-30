@@ -13,24 +13,30 @@ Given:
 3. Flags suspicious gene models
 4. Generates plots and an HTML report
 
-Folder structure
+## Folder structure
 
 GROUPF_GFFPARSER/
+
 ├── data/ # Input files (optional convenience folder)
+
 ├── results/ # Output files (generated automatically)
+
 ├── src/ # Source code (no need to edit)
+
 ├── test/ # Automated tests
+
 ├── Dockerfile # Docker image definition
+
 ├── pyproject.toml # Project configuration
+
 └── README.md # This file
 
 
 
 # Option 1 : Run using Docker 🐳 (Recommended)
-###Prequisite : Docker installed
+### Prequisite : Docker installed
              https://www.docker.com/get-started/
 
-Steps:
 ## Step 1 Build docker image (One time)
     Run this **from the project root directory**
     (the folder containing `Dockerfile`):
@@ -49,7 +55,7 @@ Steps:
     -g /data/test.gff -f /data/test.fasta --outdir /results
     
 
-    Using files from ANY location (Advanced)
+## Using files from ANY location (Advanced)
 
     You are not required to use the data/ folder.
 
@@ -83,7 +89,7 @@ Steps:
     --outdir /results
 
 
-    ### Having file path issues?
+### Having file path issues?
 
     This repository already includes a `data/` folder.
 
@@ -112,9 +118,9 @@ Steps:
     -f /data/test.fasta \
     --outdir /results
 
-    **Note:** If `${PWD}` causes issues, replace it with the full absolute path to your project directory.
+**Note:** If `${PWD}` causes issues, replace it with the full absolute path to your project directory.
 
-                Example:   -v "C:/Users/Name/project/data:/data"
+          Example:   -v "C:/Users/Name/project/data:/data"
 
 
 
