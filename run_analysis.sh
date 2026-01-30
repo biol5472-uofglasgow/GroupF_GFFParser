@@ -1,34 +1,34 @@
 #!/bin/bash
 # ================================
 # run_analysis.sh
-# Usage: ./run_analysis.sh <GFF_FILE> <FASTA_FILE> [OUT_DIR] [--strict]
+# Usage: ./run_analysis.sh <GFF_FILE> [FASTA_FILE] [OUT_DIR] [--strict]
 # ================================
 
 GFF_FILE="$1"
-FASTA_FILE="$2"
-OUT_DIR="${3:-results}"  # default to 'results' if not provided
-
-# Check if last argument is --strict
+FASTA_FILE=""
+OUT_DIR=""
 STRICT_FLAG=""
+
+# Determine strict flag (if last argument is --strict)
 if [ "${@: -1}" == "--strict" ]; then
     STRICT_FLAG="--strict"
 fi
 
-# Check GFF file exists
-if [ ! -f "$GFF_FILE" ]; then
-    echo "ERROR: GFF file not found: $GFF_FILE"
-    exit 1
+# Determine FASTA and OUT_DIR based on arguments
+if [ -z "$3" ]; then
+    # Only 2 arguments → GFF and OUT_DIR
+    OUT_DIR="$2"
+else
+    # 3 arguments → FASTA provided
+    FASTA_FILE="$2"
+    OUT_DIR="$3"
 fi
 
-# Check FASTA file exists, warn if not
-if [ ! -f "$FASTA_FILE" ]; then
-    echo "WARNING: FASTA file not found: $FASTA_FILE"
-fi
 
-# Make sure output directory exists
+# Create output folder if missing
 mkdir -p "$OUT_DIR"
 
-# Get directory of GFF file (for Docker mount)
+# Get directory from GFF for Docker mount
 INPUT_DIR="$(dirname "$GFF_FILE")"
 
 # Print info
@@ -38,8 +38,18 @@ echo "Output directory: $OUT_DIR"
 echo "Mounted input directory: $INPUT_DIR"
 echo "Passing strict flag: $STRICT_FLAG"
 
+# Build Docker command
+DOCKER_CMD=(docker run --rm -v "$INPUT_DIR:/work" -w /work gene-summariser -g "$(basename "$GFF_FILE")" --outdir "$OUT_DIR")
+
+# Add FASTA if provided
+if [ -n "$FASTA_FILE" ]; then
+    DOCKER_CMD+=(-f "$(basename "$FASTA_FILE")")
+fi
+
+# Add strict flag if provided
+if [ -n "$STRICT_FLAG" ]; then
+    DOCKER_CMD+=("$STRICT_FLAG")
+fi
+
 # Run Docker
-docker run --rm -v "$INPUT_DIR:/work" -w /work gene-summariser \
-    -g "$(basename "$GFF_FILE")" \
-    -f "$(basename "$FASTA_FILE")" \
-    --outdir "$OUT_DIR" $STRICT_FLAG
+"${DOCKER_CMD[@]}"
