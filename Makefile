@@ -44,6 +44,7 @@ help:
 	@echo "  make docker-build     - Build Docker image"
 	@echo "  make docker-run       - Run Docker container"
 	@echo "  make docker-test      - Test Docker container"
+	@echo "  make docker-run-test  - Run with test data (one command)"
 	@echo "  make docker-clean     - Remove Docker image"
 	@echo ""
 	@echo "$(YELLOW)Cleanup:$(NC)"
@@ -122,6 +123,18 @@ docker-test:
 	@echo "$(GREEN)Testing Docker container...$(NC)"
 	$(DOCKER) run --rm $(DOCKER_IMAGE):$(DOCKER_TAG) --help
 	@echo "$(GREEN)Docker container test passed!$(NC)"
+
+## docker-run-test: Run Docker container with test data
+docker-run-test:
+	@echo "$(GREEN)Running Docker container with test data...$(NC)"
+	$(DOCKER) run --rm \
+		-v "$(PWD)/test/fixtures:/data" \
+		-v "$(PWD)/results:/app/results" \
+		$(DOCKER_IMAGE):$(DOCKER_TAG) \
+		--gff /data/models.gff3 \
+		--fasta /data/testfasta.fasta \
+		--outdir /app/results
+	@echo "$(GREEN)Results saved to ./results/$(NC)"
 
 ## docker-clean: Remove Docker image
 docker-clean:
