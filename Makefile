@@ -127,13 +127,23 @@ docker-test:
 ## docker-run-test: Run Docker container with test data
 docker-run-test:
 	@echo "$(GREEN)Running Docker container with test data...$(NC)"
+ifeq ($(OS),Windows_NT)
 	$(DOCKER) run --rm \
-		-v "$(PWD)/test/fixtures:/data" \
+		-v "%cd%/tests/fixtures:/data" \
+		-v "%cd%/results:/app/results" \
+		$(DOCKER_IMAGE):$(DOCKER_TAG) \
+		--gff /data/models.gff3 \
+		--fasta /data/testfasta.fasta \
+		--outdir /app/results
+else
+	$(DOCKER) run --rm \
+		-v "$(PWD)/tests/fixtures:/data" \
 		-v "$(PWD)/results:/app/results" \
 		$(DOCKER_IMAGE):$(DOCKER_TAG) \
 		--gff /data/models.gff3 \
 		--fasta /data/testfasta.fasta \
 		--outdir /app/results
+endif
 	@echo "$(GREEN)Results saved to ./results/$(NC)"
 
 ## docker-clean: Remove Docker image
