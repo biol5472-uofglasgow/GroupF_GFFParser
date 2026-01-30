@@ -34,7 +34,7 @@ GROUPF_GFFPARSER/
 
 
 # Option 1 : Run using Docker 🐳 (Recommended)
-### Prequisite : Docker installed
+### Prerequisite : Docker installed
              https://www.docker.com/get-started/
 
 ## Step 1 Build docker image (One time)
@@ -53,6 +53,8 @@ GROUPF_GFFPARSER/
     -v "/outputpath:/results" \
     gene-summariser:test \
     -g /data/test.gff -f /data/test.fasta --outdir /results
+
+    # Replace `/inputpath` and `/outputpath` with actual folders on your computer.
     
 
 ## Using files from ANY location (Advanced)
@@ -68,10 +70,10 @@ GROUPF_GFFPARSER/
 
     Example: GFF and FASTA in different folders (Windows)
     
-    docker run --rm `
+      docker run --rm `
     -v "C:/Users/User/Documents/gff_files:/gff" `
     -v "C:/Users/User/Downloads/fasta_files:/fasta" `
-    -v "${pwd}/results:/results" `
+    -v "${PWD}/results:/results" `
     gene-summariser:test `
     -g /gff/genes.gff3 `
     -f /fasta/genome.fasta `
@@ -79,7 +81,7 @@ GROUPF_GFFPARSER/
 
     Example: GFF and FASTA in different folders (macOS / Linux)
     
-    docker run --rm \
+      docker run --rm \
     -v "$HOME/gff_files:/gff" \
     -v "$HOME/fasta_files:/fasta" \
     -v "$(pwd)/results:/results" \
