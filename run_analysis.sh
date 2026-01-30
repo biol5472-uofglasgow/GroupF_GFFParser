@@ -1,47 +1,22 @@
 #!/bin/bash
-# Simple wrapper script for gene-summariser
+# Usage: ./docker-run-test.sh <gff_file> <fasta_file> <outdir>
+# Must be run from the project root
 
-set -e  # Exit on error
+GFF_FILE="$1"
+FASTA_FILE="$2"
+OUT_DIR="$3"
 
-# Default values
-GFF_FILE=""
-FASTA_FILE=""
-OUTPUT_DIR="results"
-
-# Parse arguments
-while [[ $# -gt 0 ]]; do
-  case $1 in
-    --gff)
-      GFF_FILE="$2"
-      shift 2
-      ;;
-    --fasta)
-      FASTA_FILE="$2"
-      shift 2
-      ;;
-    --outdir)
-      OUTPUT_DIR="$2"
-      shift 2
-      ;;
-    *)
-      echo "Unknown option: $1"
-      exit 1
-      ;;
-  esac
-done
-
-# Validate
-if [ -z "$GFF_FILE" ]; then
-  echo "Error: --gff required"
-  exit 1
+# Set default output folder
+if [ -z "$OUT_DIR" ]; then
+  OUT_DIR="results"
 fi
 
-# Run
-echo "Running gene-summariser..."
-if [ -n "$FASTA_FILE" ]; then
-  gene-summariser --gff "$GFF_FILE" --fasta "$FASTA_FILE" --outdir "$OUTPUT_DIR"
-else
-  gene-summariser --gff "$GFF_FILE" --outdir "$OUTPUT_DIR"
-fi
+mkdir -p "$OUT_DIR"
 
-echo "Done! Results in $OUTPUT_DIR"
+docker run --rm \
+  -v "$PWD":/work \
+  -w /work \
+  gene-summariser:latest \
+  --gff "$GFF_FILE" \
+  --fasta "$FASTA_FILE" \
+  --outdir "$OUT_DIR"
