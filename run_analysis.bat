@@ -39,7 +39,11 @@ echo Mounted input directory: %INPUT_DIR%
 echo Passing strict flag: %STRICT_FLAG%
 
 REM Build Docker command
-SET DOCKER_CMD=docker run --rm -v "%INPUT_DIR%:/work" -w /work gene-summariser -g "%~nx1" --outdir "%OUT_DIR%" %STRICT_FLAG%
+SET DOCKER_CMD=docker run --rm ^
+ -v "%INPUT_DIR%:/work" ^
+ -v "%OUT_DIR%:/output" ^
+ -w /work gene-summariser ^
+ -g "%~nx1" --outdir "/output" %STRICT_FLAG%
 
 REM Add FASTA if provided
 IF NOT "%FASTA_FILE%"=="" SET DOCKER_CMD=%DOCKER_CMD% -f "%~nx2"

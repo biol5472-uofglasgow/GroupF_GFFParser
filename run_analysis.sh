@@ -39,7 +39,7 @@ echo "Mounted input directory: $INPUT_DIR"
 echo "Passing strict flag: $STRICT_FLAG"
 
 # Build Docker command
-DOCKER_CMD=(docker run --rm -v "$INPUT_DIR:/work" -w /work gene-summariser -g "$(basename "$GFF_FILE")" --outdir "$OUT_DIR")
+DOCKER_CMD=(docker run --rm -v "$INPUT_DIR:/work" -v "$OUT_DIR:/output" -w /work gene-summariser -g "$(basename "$GFF_FILE")" --outdir "/output" "$STRICT_FLAG")
 
 # Add FASTA if provided
 if [ -n "$FASTA_FILE" ]; then
