@@ -58,8 +58,8 @@ mac: .\run_analysis.sh <GFF_file_Path> <Fasta_File_Path> <Results_file_path>
 
 ## Step 1 Create and activate a virtual environment (Optional but recommended)
 
-windows: python -m venv venv   venv\Scripts\activate
-macOS:   python3 -m venv venv  source venv/bin/activate
+    windows: python -m venv venv   venv\Scripts\activate                                                                        
+    macOS:   python3 -m venv venv  source venv/bin/activate
 
 ## Step 2 
 
