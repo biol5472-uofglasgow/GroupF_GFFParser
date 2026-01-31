@@ -34,95 +34,33 @@ GROUPF_GFFPARSER/
 
 
 # Option 1 : Run using Docker 🐳 (Recommended)
-### Prerequisite : Docker installed
+### Prequisite : Docker installed
              https://www.docker.com/get-started/
 
 ## Step 1 Build docker image (One time)
     Run this **from the project root directory**
     (the folder containing `Dockerfile`):
 
-    docker build -t gene-summariser:test .
+    
+    docker build -t gene-summariser:latest .
 
 
 ## Step 2  Run the following commands from the project root:
 
-    (Beginner Friendly)
+    windows:  .\run_analysis.bat <GFF_file_Path> <Fasta_File_Path> <Results_file_path> 
 
-    docker run --rm \
-    -v "/inputpath:/data" \
-    -v "/outputpath:/results" \
-    gene-summariser:test \
-    -g /data/test.gff -f /data/test.fasta --outdir /results
-
-    # Replace `/inputpath` and `/outputpath` with actual folders on your computer.
-    
-
-## Using files from ANY location (Advanced)
-
-    You are not required to use the data/ folder.
-
-    Rule to remember
-    -v HOST_PATH : CONTAINER_PATH
-
-    Left side (HOST_PATH) → any folder on your computer (you may change this)
-
-    Right side (CONTAINER_PATH) → path inside Docker (must match -g / -f)
-
-    Example: GFF and FASTA in different folders (Windows)
-    
-      docker run --rm `
-    -v "C:/Users/User/Documents/gff_files:/gff" `
-    -v "C:/Users/User/Downloads/fasta_files:/fasta" `
-    -v "${PWD}/results:/results" `
-    gene-summariser:test `
-    -g /gff/genes.gff3 `
-    -f /fasta/genome.fasta `
-    --outdir /results
-
-    Example: GFF and FASTA in different folders (macOS / Linux)
-    
-      docker run --rm \
-    -v "$HOME/gff_files:/gff" \
-    -v "$HOME/fasta_files:/fasta" \
-    -v "$(pwd)/results:/results" \
-    gene-summariser:test \
-    -g /gff/genes.gff3 \
-    -f /fasta/genome.fasta \
-    --outdir /results
+    mac: .\run_analysis.sh <GFF_file_Path> <Fasta_File_Path> <Results_file_path>
 
 
-### Having file path issues?
 
-    This repository already includes a `data/` folder.
+    Example:  
 
-    If you encounter repeated errors related to file paths or file locations,
-    copy your GFF/GFF3 and FASTA files into the `data/` folder and rerun
-    the Quick Start Docker command.
+    .\run_analysis.bat C:\User\Desktop\example.gff C:\User\Desktop\fasta.fasta  C:\Users\98184\remote\OneDrive\Desktop\TESTSOFTWARE 
 
+### Note :
 
-    (Windows) Poweshell
-
-    docker run --rm `
-    -v "${PWD}/data:/data" `
-    -v "${PWD}/results:/results" `
-    gene-summariser:test `
-    -g /data/test.gff `
-    -f /data/test.fasta `
-    --outdir /results
-
-    macOS/ Linux 
-
-    docker run --rm \
-    -v "$(pwd)/data:/data" \
-    -v "$(pwd)/results:/results" \
-    gene-summariser:test \
-    -g /data/test.gff \
-    -f /data/test.fasta \
-    --outdir /results
-
-**Note:** If `${PWD}` causes issues, replace it with the full absolute path to your project directory.
-
-          Example:   -v "C:/Users/Name/project/data:/data"
-
-
+1. If any file or folder path contains spaces, wrap it in double quotes.
+2. While relative paths may work, absolute paths are strongly recommended, especially when running via Docker, to avoid path resolution issues.
+3. FASTA file must match the reference used in the GFF (if required)
+4. All output files (summary tables, QC flags, and HTML report) will be written to the specified results directory..
 
