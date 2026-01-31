@@ -17,13 +17,13 @@ Given:
 
 GROUPF_GFFPARSER/
 
-├── data/ # Input files (optional convenience folder)
-├── results/ # Output files (generated automatically)
-├── src/ # Source code (no need to edit)
-├── test/ # Automated tests
-├── Dockerfile # Docker image definition
-├── pyproject.toml # Project configuration
-└── README.md # This file
+    ├── data/ # Input files (optional convenience folder)
+    ├── results/ # Output files (generated automatically)
+    ├── src/ # Source code (no need to edit)
+    ├── test/ # Automated tests
+    ├── Dockerfile # Docker image definition
+    ├── pyproject.toml # Project configuration
+    └── README.md # This file
 
 
 
@@ -41,9 +41,9 @@ GROUPF_GFFPARSER/
 
 ## Step 2  Run the following commands from the project root:
 
-    windows:  .\run_analysis.bat <GFF_file_Path> <Fasta_File_Path> <Results_file_path> 
+windows:  .\run_analysis.bat <GFF_file_Path> <Fasta_File_Path> <Results_file_path> 
 
-    mac: .\run_analysis.sh <GFF_file_Path> <Fasta_File_Path> <Results_file_path>
+mac: .\run_analysis.sh <GFF_file_Path> <Fasta_File_Path> <Results_file_path>
 
 
 
