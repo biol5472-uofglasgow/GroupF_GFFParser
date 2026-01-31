@@ -93,8 +93,8 @@ When --strict is enabled:
 
 Example :
 
-Windows: gene-summariser --gff "C:\Users\USERNAME\Desktop\large.gff" --fasta "C:\Users\USERNAME\Desktop\large.fasta" --outdir "C:\Users\USERNAME\Desktop\results" --strict
-macOS: gene-summariser --gff "/Users/username/Desktop/large.gff" --fasta "/Users/username/Desktop/large.fasta" --outdir "/Users/username/Desktop/results" --strict
+    Windows: gene-summariser --gff "C:\Users\USERNAME\Desktop\large.gff" --fasta "C:\Users\USERNAME\Desktop\large.fasta" --outdir "C:\Users\USERNAME\Desktop\results" --strict
+    macOS: gene-summariser --gff "/Users/username/Desktop/large.gff" --fasta "/Users/username/Desktop/large.fasta" --outdir "/Users/username/Desktop/results" --strict
 
 
 Treats selected QC issues as errors instead of warnings
