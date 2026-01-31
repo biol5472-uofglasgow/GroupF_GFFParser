@@ -43,7 +43,7 @@ GROUPF_GFFPARSER/
 
 windows:  .\run_analysis.bat <GFF_file_Path> <Fasta_File_Path> <Results_file_path> 
 
-mac: .\run_analysis.sh <GFF_file_Path> <Fasta_File_Path> <Results_file_path>
+mac: ./run_analysis.sh <GFF_file_Path> <Fasta_File_Path> <Results_file_path>
 
 
 
