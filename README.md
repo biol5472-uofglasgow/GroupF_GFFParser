@@ -18,17 +18,11 @@ Given:
 GROUPF_GFFPARSER/
 
 ├── data/ # Input files (optional convenience folder)
-
 ├── results/ # Output files (generated automatically)
-
 ├── src/ # Source code (no need to edit)
-
 ├── test/ # Automated tests
-
 ├── Dockerfile # Docker image definition
-
 ├── pyproject.toml # Project configuration
-
 └── README.md # This file
 
 
@@ -59,6 +53,25 @@ GROUPF_GFFPARSER/
     macOS:      ./run_analysis.sh /Users/username/Desktop/example.gff /Users/username/Desktop/fasta.fasta /Users/username/OneDrive/Desktop/result\
 
     
+# Option 2 Run without Docker (Python only)
+    This option allows users to run the tool locally using Python, without Docker.
+
+## Step 1 Create and activate a virtual environment (Optional but recommended)
+
+windows: python -m venv venv   venv\Scripts\activate
+macOS:   python3 -m venv venv  source venv/bin/activate
+
+## Step 2 
+
+pip install .
+
+## Step 3
+
+gene-summariser --gff <PATH_TO_GFF> --fasta <PATH_TO_FASTA> --outdir <OUTPUT_DIRECTORY>
+
+
+
+
 
 ### Note :
 
