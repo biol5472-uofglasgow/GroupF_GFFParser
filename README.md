@@ -63,11 +63,11 @@ mac: .\run_analysis.sh <GFF_file_Path> <Fasta_File_Path> <Results_file_path>
 
 ## Step 2 
 
-pip install .
+    pip install .
 
 ## Step 3
 
-gene-summariser --gff <PATH_TO_GFF> --fasta <PATH_TO_FASTA> --outdir <OUTPUT_DIRECTORY>
+    gene-summariser --gff <PATH_TO_GFF> --fasta <PATH_TO_FASTA> --outdir <OUTPUT_DIRECTORY>
 
 
 
