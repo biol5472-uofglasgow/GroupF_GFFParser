@@ -55,8 +55,8 @@ GROUPF_GFFPARSER/
 
     Example:  
 
-    windows:    .\run_analysis.bat C:\User\Desktop\example.gff C:\User\Desktop\fasta.fasta  C:\Users\98184\remote\OneDrive\Desktop\TESTSOFTWARE
-    macOS:      ./run_analysis.sh /Users/username/Desktop/example.gff /Users/username/Desktop/fasta.fasta /Users/username/OneDrive/Desktop/TESTSOFTWARE
+    windows:    .\run_analysis.bat C:\User\Desktop\example.gff C:\User\Desktop\fasta.fasta  C:\Users\98184\remote\OneDrive\Desktop\result\
+    macOS:      ./run_analysis.sh /Users/username/Desktop/example.gff /Users/username/Desktop/fasta.fasta /Users/username/OneDrive/Desktop/result\
 
     
 
