@@ -54,7 +54,7 @@ def main() -> None:
         help="Fail execution if any QC warning is detected",
     )
 
- 
+
     parser.add_argument(
         "--outdir", default="results", help="Output directory for all generated files"
     )
