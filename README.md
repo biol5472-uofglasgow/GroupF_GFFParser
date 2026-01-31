@@ -78,5 +78,30 @@ gene-summariser --gff <PATH_TO_GFF> --fasta <PATH_TO_FASTA> --outdir <OUTPUT_DIR
 1. If any file or folder path contains spaces, wrap it in double quotes.
 2. While relative paths may work, absolute paths are strongly recommended, especially when running via Docker, to avoid path resolution issues.
 3. FASTA file must match the reference used in the GFF (if required)
-4. All output files (summary tables, QC flags, and HTML report) will be written to the specified results directory..
+4. All output files (summary tables, QC flags, and HTML report) will be written to the specified results directory.
+
+
+## Strict Mode
+
+The tool supports an optional strict mode that enforces more stringent quality control checks during analysis.
+
+When strict mode is enabled, the program will fail fast if critical QC issues are detected, instead of continuing with warnings.
+
+What strict mode does
+
+When --strict is enabled:
+
+Example :
+
+Windows: gene-summariser --gff "C:\Users\USERNAME\Desktop\large.gff" --fasta "C:\Users\USERNAME\Desktop\large.fasta" --outdir "C:\Users\USERNAME\Desktop\results" --strict
+macOS: gene-summariser --gff "/Users/username/Desktop/large.gff" --fasta "/Users/username/Desktop/large.fasta" --outdir "/Users/username/Desktop/results" --strict
+
+
+Treats selected QC issues as errors instead of warnings
+
+Stops execution if critical problems are found in the input data
+
+Ensures outputs are only produced for high-quality, valid inputs
+
+Helps catch problems early in automated or production workflows
 
