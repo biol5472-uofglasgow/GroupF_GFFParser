@@ -35,7 +35,7 @@ GROUPF_GFFPARSER/
 
 # Option 1 : Run using Docker 🐳 (Recommended)
 ### Prequisite : Docker installed
-             https://www.docker.com/get-started/
+    https://www.docker.com/get-started/
 
 ## Step 1 Build docker image (One time)
     Run this **from the project root directory**
@@ -55,7 +55,10 @@ GROUPF_GFFPARSER/
 
     Example:  
 
-    .\run_analysis.bat C:\User\Desktop\example.gff C:\User\Desktop\fasta.fasta  C:\Users\98184\remote\OneDrive\Desktop\TESTSOFTWARE 
+    windows:    .\run_analysis.bat C:\User\Desktop\example.gff C:\User\Desktop\fasta.fasta  C:\Users\98184\remote\OneDrive\Desktop\TESTSOFTWARE
+    macOS:      ./run_analysis.sh /Users/username/Desktop/example.gff /Users/username/Desktop/fasta.fasta /Users/username/OneDrive/Desktop/TESTSOFTWARE
+
+    
 
 ### Note :
 
