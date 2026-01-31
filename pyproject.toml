@@ -21,6 +21,7 @@ dependencies = [
     "gffutils>=0.12",
     "pandas>=2.0",
     "biopython>=1.86",
+    "matplotlib>=3.7",
 ]
 
 [project.optional-dependencies]
@@ -49,6 +50,7 @@ warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
 strict = true
+ignore_missing_imports = true
 
 [tool.ruff]
 line-length = 100

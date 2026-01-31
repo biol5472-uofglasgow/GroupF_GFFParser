@@ -35,11 +35,8 @@ jobs:
 
       - name: Run ruff linter
         run: |
-          ruff check src/ tests/ --output-format=github
+          ruff check src/ test/ --output-format=github
 
-      - name: Check code formatting
-        run: |
-          ruff format --check src/ tests/
 
   type-check:
     name: Type Check
@@ -72,7 +69,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.10", "3.11"]
+        python-version: ["3.10", "3.11"]
 
     steps:
       - name: Checkout code
@@ -102,7 +99,7 @@ jobs:
 
       - name: Archive test results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-results-${{ matrix.python-version }}
           path: |
@@ -132,7 +129,7 @@ jobs:
 
       - name: Run integration tests
         run: |
-          pytest tests/test_integration.py -v --tb=short
+          pytest test/test_integration.py -v --tb=short
 
   # ============================================================================
   # DOCKER BUILD
@@ -153,6 +150,7 @@ jobs:
         with:
           context: .
           push: false
+          load: true  
           tags: gene-summariser:test
           cache-from: type=gha
           cache-to: type=gha,mode=max

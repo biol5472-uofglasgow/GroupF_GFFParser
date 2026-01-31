@@ -1,6 +1,7 @@
 
-import os 
+import os
 import sys
+
 
 def validate_inputs(args):
     if not os.path.isfile(args.gff):

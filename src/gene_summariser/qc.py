@@ -2,9 +2,10 @@
 
 from collections.abc import Callable
 
+from Bio import SeqIO
+
 from gene_summariser.fasta import get_full_sequence
 from gene_summariser.models import Transcript
-from Bio import SeqIO
 
 
 class QCChecker:
@@ -21,7 +22,7 @@ class QCChecker:
 
     def __init__(
         self,
-        fasta_file: str,
+        fasta_file: str | None =None,
         max_exon_count: int = 50,
         min_cds_length: int = 30,
         max_exon_length: int = 1000000,
@@ -30,7 +31,7 @@ class QCChecker:
         self.genome = None
 
         if fasta_file:
-            self.genome = SeqIO.to_dict(SeqIO.parse(fasta_file, "fasta"))
+            self.genome = SeqIO.to_dict(SeqIO.parse(fasta_file, "fasta")) # type: ignore[no-untyped-call]
         """Initialize QC checker with configurable thresholds.
 
         Args:
@@ -322,8 +323,9 @@ class QCChecker:
         """
         Check if the transcript's CDS starts with a valid start codon.
 
-        For all protein coding genes, the CDS should begin with a start codon (ATG, GTG, or TTG).
-        this flag will highlight transcripts that do not meet this criteria, 
+        For all protein coding genes, the CDS should begin with a start codon (ATG, GTG,
+        or TTG).
+        this flag will highlight transcripts that do not meet this criteria,
         indicating a potential annotation error or incomplete CDS.
 
         Note:
@@ -343,7 +345,8 @@ class QCChecker:
         """
         Check if the transcript's CDS ends with a valid stop codon.
 
-        For all protein coding genes, the CDS should end with a stop codon (TAA, TAG, or TGA).
+        For all protein coding genes, the CDS should end with a stop codon (TAA, TAG, or
+        TGA).
         This flag will highlight transcripts that do not meet this criteria,
         indicating a potential annotation error or incomplete CDS.
 
@@ -353,7 +356,7 @@ class QCChecker:
         to contain stop codons and should be excluded upstream.
         """
         if not self.genome or not transcript.has_cds:
-                return None
+            return None
         stop_codons = {"TAA", "TAG", "TGA"}
         full_sequence = get_full_sequence(self.genome, transcript)
         if full_sequence[-3:].upper() not in stop_codons:
