@@ -18,7 +18,7 @@ def project_pipeline(gff_file: str, fasta_file: str, outdir: Path) -> None:
     summaries = calculator.calculate_summaries(transcripts)
 
     writer = OutputWriter(outdir)
-    summary_path = writer.write_transcript_summary(summaries)
+    writer.write_transcript_summary(summaries)
     writer.write_provenance(
         input_file=Path(gff_file),
         parameters={"fasta": fasta_file},
