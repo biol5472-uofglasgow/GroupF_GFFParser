@@ -46,18 +46,8 @@ def main() -> None:
         help="Optional ,please write the path of the genome fasta file here.",
     )
 
-    # Output options
-    parser.add_argument(
-        "-o",
-        "--output",
-        default="qc_report.txt",
-        help="Output QC report file (default: qc_report.txt)",
-    )
-
-    parser.add_argument(
-        "--log", default="qc.log", help="Log file for detailed execution info"
-    )
-
+    
+    
     # fail if any strict mode is detected
     parser.add_argument(
         "--strict",
@@ -65,13 +55,7 @@ def main() -> None:
         help="Fail execution if any QC warning is detected",
     )
 
-    # Output format option
-    parser.add_argument(
-        "--format",
-        choices=["text", "csv", "json"],
-        default="text",
-        help="Output format for QC report",
-    )
+    
     parser.add_argument(
         "--outdir", default="results", help="Output directory for all generated files"
     )
