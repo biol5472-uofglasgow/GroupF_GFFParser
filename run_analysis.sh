@@ -7,11 +7,11 @@
 GFF_FILE="$1"
 FASTA_FILE=""
 OUT_DIR=""
-STRICT_FLAG=""
+STRICT=false
 
-# Determine strict flag (if last argument is --strict)
-if [ "${@: -1}" == "--strict" ]; then
-    STRICT_FLAG="--strict"
+# Detect --strict flag (4th argument)
+if [ "$4" = "--strict" ]; then
+    STRICT=true
 fi
 
 # Determine FASTA and OUT_DIR based on arguments
@@ -36,19 +36,23 @@ echo "GFF file: $GFF_FILE"
 echo "FASTA file: $FASTA_FILE"
 echo "Output directory: $OUT_DIR"
 echo "Mounted input directory: $INPUT_DIR"
-echo "Passing strict flag: $STRICT_FLAG"
 
-# Build Docker command
-DOCKER_CMD=(docker run --rm -v "$INPUT_DIR:/work" -v "$OUT_DIR:/output" -w /work gene-summariser -g "$(basename "$GFF_FILE")" --outdir "/output" "$STRICT_FLAG")
+DOCKER_CMD=(docker run --rm \
+    -v "$INPUT_DIR:/work" \
+    -v "$OUT_DIR:/output" \
+    -w /work \
+    gene-summariser \
+    -g "$(basename "$GFF_FILE")" \
+    --outdir "/output")
 
 # Add FASTA if provided
 if [ -n "$FASTA_FILE" ]; then
     DOCKER_CMD+=(-f "$(basename "$FASTA_FILE")")
 fi
 
-# Add strict flag if provided
-if [ -n "$STRICT_FLAG" ]; then
-    DOCKER_CMD+=("$STRICT_FLAG")
+# Add strict flag if enabled
+if [ "$STRICT" = true ]; then
+    DOCKER_CMD+=(--strict)
 fi
 
 # Run Docker
