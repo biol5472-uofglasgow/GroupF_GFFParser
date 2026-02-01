@@ -142,3 +142,11 @@ The `qc_flags.bed` file can be directly loaded into genome browsers for **visual
 
 > ⚠️ Note: BED files use **0-based, half-open coordinates** (BED standard).
 
+
+## 📊 HTML QC Report
+
+The `qc_report.html` provides:
+- Overall transcript statistics
+- QC flag distribution
+- Examples of flagged transcripts
+- Full provenance (tool version, inputs, parameters)
