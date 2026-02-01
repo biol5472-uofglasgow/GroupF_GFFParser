@@ -68,9 +68,6 @@ GROUPF_GFFPARSER/
 
 ## Step 1 Create and activate a virtual environment (Optional but recommended)
 
-    windows: python -m venv venv   venv\Scripts\activate                                                                        
-    macOS:   python3 -m venv venv  source venv/bin/activate
-
 ## Step 2 
 
     pip install .
