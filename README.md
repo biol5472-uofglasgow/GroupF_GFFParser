@@ -8,10 +8,20 @@ Given:
 - a **GFF / GFF3 file** (required)
 - a **FASTA file** (optional)
 
-1. Parses gene and transcript models from a GFF/GFF3 file.
-2. Calculates QC metrics (exon counts, CDS presence, etc)
-3. Flags suspicious gene models
-4. Generates plots and an HTML report
+## 🚀 Features
+
+- Parses gene and transcript models from a GFF/GFF3 file.
+- Calculates QC metrics (exon counts, CDS presence, etc)
+- Detects common gene model QC issues:
+  - Missing start codon
+  - Missing stop codon
+  - CDS phase inconsistencies
+  - Single-exon transcripts
+  - Transcripts without CDS
+- Produces **visualisation-ready BED files**
+- Outputs structured **GFF3 annotations**
+- Generates a **publication-ready HTML QC report**
+- Captures **full run provenance** for reproducibility
 
 ## Folder structure
 
