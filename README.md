@@ -20,7 +20,7 @@ Given:
   - Transcripts without CDS
 - Produces **visualisation-ready BED files**
 - Outputs structured **GFF3 annotations**
-- Generates a **publication-ready HTML QC report**
+- Generates a ** HTML QC report**
 - Captures **full run provenance** for reproducibility
 
 ## Folder structure
@@ -114,4 +114,31 @@ Stops execution if critical problems are found in the input data
 Ensures outputs are only produced for high-quality, valid inputs
 
 Helps catch problems early in automated or production workflows
+
+
+## 📁 Output Files
+
+| File | Description |
+|----|----|
+| `qc_flags.bed` | Genomic intervals of QC-flagged transcripts (BED format) |
+| `qc_flags.gff3` | Feature-rich QC annotations with biological context |
+| `transcript_summary.tsv` | Tabular summary of transcript-level QC results |
+| `qc_report.html` | Interactive HTML report with statistics and examples |
+| `run.json` | Run metadata, parameters, and provenance |
+
+
+## 🧬 BED File Usage (Genome Browsers)
+
+The `qc_flags.bed` file can be directly loaded into genome browsers for **visual inspection and validation**.
+
+### Supported browsers
+- **UCSC Genome Browser**
+- **IGV (Integrative Genomics Viewer)**
+
+### Example (IGV)
+1. Open IGV
+2. Load the reference genome
+3. `File → Load from File → qc_flags.bed`
+
+> ⚠️ Note: BED files use **0-based, half-open coordinates** (BED standard).
 
