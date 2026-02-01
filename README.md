@@ -51,9 +51,9 @@ GROUPF_GFFPARSER/
 
 ## Step 2  Run the following commands from the project root:
 
-windows:  .\run_analysis.bat <GFF_file_Path> <Fasta_File_Path> <Results_file_path> 
+    windows:  .\run_analysis.bat <PATH_TO_GFF> <PATH_TO_FASTA> <OUTPUT_DIRECTORY> 
 
-mac: ./run_analysis.sh <GFF_file_Path> <Fasta_File_Path> <Results_file_path>
+    mac: ./run_analysis.sh <PATH_TO_GFF> <PATH_TO_FASTA> <OUTPUT_DIRECTORY>
 
 
 
