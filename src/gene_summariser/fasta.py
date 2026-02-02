@@ -28,6 +28,6 @@ def get_full_sequence(genome: dict[str, SeqRecord], transcript: Transcript) -> s
     full_sequence = sum(seq_chunks, Seq(""))
 
     if transcript.strand == "-":
-        full_sequence = full_sequence.reverse_complement()  # type: ignore[no-untyped-call]
+        full_sequence = full_sequence.reverse_complement()
 
     return str(full_sequence)
