@@ -229,11 +229,6 @@ class ParserGFF:
 
         Yields:
             Gene: Gene objects with their associated transcripts
-
-        Example:
-            >>> parser = ParserGFF("annotations.gff3")
-            >>> for gene in parser.parse_genes():
-            ...     print(f"Gene {gene.gene_id}: {gene.n_transcripts} transcripts")
         """
         for gene_feature in self.db.features_of_type("gene"):
             transcripts = []
