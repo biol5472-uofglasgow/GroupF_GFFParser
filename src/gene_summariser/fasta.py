@@ -15,11 +15,11 @@ def get_full_sequence(genome: dict[str, SeqRecord], transcript: Transcript) -> s
         str: The full spliced CDS sequence.
     """
     seq_chunks: list[Seq] = []
-
-    for cds in transcript.cds_features:
+    cds_features_sorted = sorted(transcript.cds_features, key=lambda cds: cds.start)
+    for cds in cds_features_sorted:
         record = genome[cds.seqid]
 
-        seq=record.seq
+        seq = record.seq
         if seq is None:
             raise ValueError(f"No sequence found for {cds.seqid}")
 
@@ -28,6 +28,6 @@ def get_full_sequence(genome: dict[str, SeqRecord], transcript: Transcript) -> s
     full_sequence = sum(seq_chunks, Seq(""))
 
     if transcript.strand == "-":
-        full_sequence = full_sequence.reverse_complement() # type: ignore[no-untyped-call]
+        full_sequence = full_sequence.reverse_complement()  # type: ignore[no-untyped-call]
 
     return str(full_sequence)
