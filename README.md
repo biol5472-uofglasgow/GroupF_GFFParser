@@ -139,13 +139,22 @@ Run the test suite locally using `pytest`. Tests include unit tests for core log
 The `qc_flags.bed` file can be directly loaded into genome browsers for **visual inspection and validation**.
 
 ### Supported browsers
-- **UCSC Genome Browser**
 - **IGV (Integrative Genomics Viewer)**
 
-### Example (IGV)
-1. Open IGV
-2. Load the reference genome
-3. `File → Load from File → qc_flags.bed`
+### Viewing QC flags in IGV
+
+QC flags are provided as a BED file and can be visualised using IGV.
+
+1. Open IGV.
+2. Load the genome:
+   - `Genomes → Load Genome from Server`
+   - Example: If the genome is *Plasmodium falciparum* (Pf3D7) then search for this and select **Plasmodium falciparum (Pf3D7)**.
+3. Load the BED file:
+   - `File → Load from File`
+   - Select the generated `.bed` file.
+
+The genome must be loaded before the BED file so that chromosome names (e.g. `Pf3D7_01_v3`) match.
+
 
 > ⚠️ Note: BED files use **0-based, half-open coordinates** (BED standard).
            
