@@ -62,7 +62,7 @@ GROUPF_GFFPARSER/
     windows:    .\run_analysis.bat .\test\fixtures\models.gff3 .\test\fixtures\testfasta.fasta  .\results\testrun
     macOS:      ./run_analysis.sh ./test/fixtures/models.gff3 ./test/fixtures/testfasta.fasta ./results/testrun
 
-# File handeling during run
+## File handeling during run
     The above commands should work out of the box assuming you are located at the root directory of the project and cloned the full repository
     Data can however be used from any location on your device, assuming you follow your operating systems notation for absolute paths
 
