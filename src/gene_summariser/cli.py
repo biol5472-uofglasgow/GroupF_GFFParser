@@ -128,6 +128,7 @@ def main() -> None:
                 sys.exit(2)
 
         print("QC checks completed")
+        parser_gff.db_close()
 
     except Exception as e:
         print(f"Error:{e}")
