@@ -59,10 +59,13 @@ GROUPF_GFFPARSER/
 
     Example:  
 
-    windows:    .\run_analysis.bat C:\User\Desktop\example.gff C:\User\Desktop\fasta.fasta  C:\Users\98184\remote\OneDrive\Desktop\result\
-    macOS:      ./run_analysis.sh /Users/username/Desktop/example.gff /Users/username/Desktop/fasta.fasta /Users/username/OneDrive/Desktop/result\
+    windows:    .\run_analysis.bat .\test\fixtures\models.gff3 .\test\fixtures\testfasta.fasta  .\results\testrun
+    macOS:      ./run_analysis.sh ./test/fixtures/models.gff3 ./test/fixtures/testfasta.fasta ./results/testrun
 
-    
+# File handeling during run
+    The above commands should work out of the box assuming you are located at the root directory of the project and cloned the full repository
+    Data can however be used from any location on your device, assuming you follow your operating systems notation for absolute paths
+
 # Option 2 Run without Docker (Python only)
     This option allows users to run the tool locally using Python, without Docker.
 
