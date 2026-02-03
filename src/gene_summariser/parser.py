@@ -74,7 +74,7 @@ class ParserGFF:
         """
         Closes the GFF database connection to free up resources.
         """
-        self.db.close()
+        self.db.conn.close()
 
     @staticmethod
     def _get_id(feature: gffutils.Feature) -> str:
