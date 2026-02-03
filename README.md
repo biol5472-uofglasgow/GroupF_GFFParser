@@ -113,6 +113,12 @@ Ensures outputs are only produced for high-quality, valid inputs
 Helps catch problems early in automated or production workflows
 
 
+## Testing
+
+Run the test suite locally using `pytest`. Tests include unit tests for core logic and an integration test using fixture inputs.
+
+
+
 ## 📁 Output Files
 
 | File | Description |
