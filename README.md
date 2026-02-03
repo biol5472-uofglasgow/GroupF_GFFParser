@@ -37,7 +37,7 @@ GROUPF_GFFPARSER/
 
 
 
-# Option 1 : Run using Docker 🐳 (Recommended)
+# Option 1 : Run using Docker (Recommended)
 ### Prequisite : Docker installed
     https://www.docker.com/get-started/
 
@@ -119,7 +119,7 @@ Run the test suite locally using `pytest`. Tests include unit tests for core log
 
 
 
-## 📁 Output Files
+## Output Files
 
 | File | Description |
 |----|----|
@@ -130,7 +130,7 @@ Run the test suite locally using `pytest`. Tests include unit tests for core log
 | `run.json` | Run metadata, parameters, and provenance |
 
 
-## 🧬 BED File Usage (Genome Browsers)
+## BED File Usage (Genome Browsers)
 
 The `qc_flags.bed` file can be directly loaded into genome browsers for **visual inspection and validation**.
 
@@ -146,7 +146,7 @@ The `qc_flags.bed` file can be directly loaded into genome browsers for **visual
 > ⚠️ Note: BED files use **0-based, half-open coordinates** (BED standard).
 
 
-## 📊 HTML QC Report
+## HTML QC Report
 
 The `qc_report.html` provides:
 - Overall transcript statistics
