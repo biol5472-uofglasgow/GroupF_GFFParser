@@ -144,6 +144,7 @@ The `qc_flags.bed` file can be directly loaded into genome browsers for **visual
 3. `File → Load from File → qc_flags.bed`
 
 > ⚠️ Note: BED files use **0-based, half-open coordinates** (BED standard).
+           If you use relative paths when running the script, prefix them with `./` on macOS/Linux and `.\` on Windows.
 
 
 ## HTML QC Report
