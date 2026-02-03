@@ -40,7 +40,7 @@ gene-summariser = "gene_summariser.cli:main"
 where = ["src"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["test"]
 pythonpath = ["src"]
 addopts = "--cov=gene_summariser --cov-report=html --cov-report=term-missing"
 
