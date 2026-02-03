@@ -84,8 +84,10 @@ GROUPF_GFFPARSER/
 
 1. If any file or folder path contains spaces, wrap it in double quotes.
 2. While relative paths may work, absolute paths are strongly recommended, especially when running via Docker, to avoid path resolution issues.
-3. FASTA file must match the reference used in the GFF (if required)
-4. All output files (summary tables, QC flags, and HTML report) will be written to the specified results directory.
+3. If you use relative paths when running the script, prefix them with `./` on macOS/Linux and `.\` on Windows.
+4. FASTA file must match the reference used in the GFF (if required)
+5. All output files (summary tables, QC flags, and HTML report) will be written to the specified results directory.
+   
 
 
 ## Strict Mode
@@ -111,6 +113,8 @@ Stops execution if critical problems are found in the input data
 Ensures outputs are only produced for high-quality, valid inputs
 
 Helps catch problems early in automated or production workflows
+
+
 
 
 ## Testing
@@ -144,8 +148,7 @@ The `qc_flags.bed` file can be directly loaded into genome browsers for **visual
 3. `File → Load from File → qc_flags.bed`
 
 > ⚠️ Note: BED files use **0-based, half-open coordinates** (BED standard).
-           If you use relative paths when running the script, prefix them with `./` on macOS/Linux and `.\` on Windows.
-
+           
 
 ## HTML QC Report
 
