@@ -69,7 +69,7 @@ class ParserGFF:
 
         except Exception as e:
             raise ValueError(f"Error parsing GFF3 file {gff_path}: {str(e)}") from e
-        
+
     def db_close(self) -> None:
         """
         Closes the GFF database connection to free up resources.
