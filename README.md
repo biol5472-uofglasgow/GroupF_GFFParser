@@ -123,6 +123,7 @@ Helps catch problems early in automated or production workflows
 ## Testing
 
 Run the test suite locally using `pytest`. Tests include unit tests for core logic and an integration test using fixture inputs.
+pip install . should be ran before pytest
 
 
 
