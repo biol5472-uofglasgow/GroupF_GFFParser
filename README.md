@@ -135,6 +135,7 @@ Run the test suite locally using `pytest`. Tests include unit tests for core log
 | `transcript_summary.tsv` | Tabular summary of transcript-level QC results |
 | `qc_report.html` | Interactive HTML report with statistics and examples |
 | `run.json` | Run metadata, parameters, and provenance |
+| figures | Contains plots for distribution of cds length and exon count, flagged vs unflagged transcripts and a pie chart for different qc flags |
 
 
 ## BED File Usage (Genome Browsers)
